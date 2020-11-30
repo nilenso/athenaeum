@@ -8,4 +8,7 @@
                  [bidi "2.1.6"]]
   :plugins [[lein-cljfmt "0.7.0"]]
   :profiles {:uberjar {:aot :all}}
-  :main clj.athenaeum.core)
+  :main clj.athenaeum.core
+  :source-paths ["src/clj"]
+  :test-paths ["test/clj"]
+  :cljfmt {:paths ["src" "test"]})

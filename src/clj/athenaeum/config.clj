@@ -1,4 +1,4 @@
-(ns clj.athenaeum.config
+(ns athenaeum.config
   (:require [clojure.edn :as edn]))
 
 (defonce config (atom nil))

@@ -1,4 +1,4 @@
-(ns clj.athenaeum.handlers
+(ns athenaeum.handlers
   (:require [ring.util.response :as response]))
 
 (defn home

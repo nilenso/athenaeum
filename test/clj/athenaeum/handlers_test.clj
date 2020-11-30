@@ -1,6 +1,6 @@
-(ns clj.athenaeum.handlers-test
+(ns athenaeum.handlers-test
   (:require [clojure.test :refer :all]
-            [clj.athenaeum.handlers :as h]))
+            [athenaeum.handlers :as h]))
 
 (deftest home-test
   (testing "Given any request, respond with status 200"

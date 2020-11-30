@@ -1,7 +1,7 @@
-(ns clj.athenaeum.core
+(ns athenaeum.core
   (:gen-class)
-  (:require [clj.athenaeum.server :as s]
-            [clj.athenaeum.config :as c]))
+  (:require [athenaeum.server :as s]
+            [athenaeum.config :as c]))
 
 (defn -main
   [& args]

@@ -1,16 +1,15 @@
-(ns clj.athenaeum.server
+(ns athenaeum.server
   (:require [ring.adapter.jetty :as r]
-            [clj.athenaeum.handlers :as h]
-            [clj.athenaeum.config :as c]
-            [bidi.bidi :as b]
+            [athenaeum.handlers :as h]
+            [athenaeum.config :as c]
             [bidi.ring :refer (make-handler)]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [[""     h/home]
-        ["ping" h/ping]
-        [true   h/not-found]]])
+  ["/" [["" h/home]
+        ["api/" [["ping" h/ping]]]
+        [true h/not-found]]])
 
 (def handler (make-handler routes))
 
