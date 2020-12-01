@@ -13,8 +13,3 @@
     (let [res (h/ping "foo")]
       (is (= 200 (:status res)))
       (is (= "pong" (:body res))))))
-
-(deftest not-found-test
-  (testing "Given any request, respond with status 404"
-    (let [res (h/not-found "foo")]
-      (is (= 404 (:status res))))))

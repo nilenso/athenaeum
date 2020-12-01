@@ -2,16 +2,20 @@
   (:require [ring.adapter.jetty :as r]
             [athenaeum.handlers :as h]
             [athenaeum.config :as c]
-            [bidi.ring :refer (make-handler)]))
+            [bidi.ring :refer (make-handler)]
+            [ring.middleware.resource :refer [wrap-resource]]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["" h/home]
+  ["/" [["" h/index]
         ["api/" [["ping" h/ping]]]
-        [true h/not-found]]])
+        [true h/index]]])
 
-(def handler (make-handler routes))
+(def handler
+  (-> routes
+      make-handler
+      (wrap-resource "public")))
 
 (defn start-app
   []

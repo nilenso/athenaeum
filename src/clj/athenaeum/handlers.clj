@@ -9,6 +9,7 @@
   [_]
   (response/response "pong"))
 
-(defn not-found
+(defn index
   [_]
-  (response/not-found "Page not found."))
+  (-> (response/resource-response "public/index.html")
+      (response/content-type "text/html")))
