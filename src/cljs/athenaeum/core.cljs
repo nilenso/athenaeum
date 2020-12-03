@@ -1,12 +1,10 @@
 (ns athenaeum.core
-  (:require [reagent.dom :as rdom]))
+  (:require [reagent.dom :as rdom]
+            [athenaeum.views :as v]))
 
-(defonce page-state (atom nil))
-
-(defn hello-world-component
+(defn root
   []
-  [:div
-   [:h1 "Hello world"]])
+  [v/home-page])
 
 (defn run []
-  (rdom/render [hello-world-component] (js/document.getElementById "app")))
+  (rdom/render [root] (js/document.getElementById "root")))
