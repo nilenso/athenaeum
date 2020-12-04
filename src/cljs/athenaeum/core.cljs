@@ -6,5 +6,5 @@
   []
   [v/home-page])
 
-(defn run []
+(defn ^:dev/after-load run []
   (rdom/render [root] (js/document.getElementById "root")))
