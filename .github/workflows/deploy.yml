@@ -9,8 +9,10 @@ jobs:
     env:
       SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
       STAGING_HOST: ${{secrets.STAGING_HOST}}
+      STAGING_USER: ${{secrets.STAGING_USER}}
       INVENTORY: "ansible/staging"
-      PRIVATE_KEY_FILE: "ansible/private_key"
+      PRIVATE_KEY_FILE: "~/.ssh/id_rsa_gh_athenaeum"
+      KNOWN_HOSTS_FILE: "~/.ssh/known_hosts"
 
     steps:
       - uses: actions/checkout@v2
@@ -32,16 +34,21 @@ jobs:
           echo "[webservers]" > "$INVENTORY"
           echo "$STAGING_HOST" >> "$INVENTORY"
           chmod 600 "$INVENTORY"
-          
-      - name: Create private key file
+
+      - name: SSH setup
         run: |
-          echo "$SSH_PRIVATE_KEY" > "$PRIVATE_KEY_FILE"
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_PRIVATE_KEY" >> "$PRIVATE_KEY_FILE"
           chmod 600 "$PRIVATE_KEY_FILE"
+          ssh-keyscan "$STAGING_HOST" >> "$KNOWN_HOSTS_FILE"
+          chmod 644 "$KNOWN_HOSTS_FILE"
 
       - name: Deploy to staging
         run: |
           ansible-playbook \
           --inventory "$INVENTORY" \
+          --user "$STAGING_USER" \
           --private-key "$PRIVATE_KEY_FILE" \
           --become \
           ansible/webserver.yml
