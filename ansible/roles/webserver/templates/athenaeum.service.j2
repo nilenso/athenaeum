@@ -1,0 +1,10 @@
+[Unit]
+Description=Athenaeum app
+
+[Service]
+User={{ deploy_user }}
+ExecStart=java -jar /opt/athenaeum/athenaeum-uber.jar /opt/athenaeum/config.edn
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,47 @@
+name: Build uberjar and deploy to staging
+
+on: push
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+      STAGING_HOST: ${{secrets.STAGING_HOST}}
+      INVENTORY: "ansible/staging"
+      PRIVATE_KEY_FILE: "ansible/private_key"
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install frontend deps
+        run: yarn install
+
+      - name: Build the frontend
+        run: yarn release
+
+      - name: Install backend deps
+        run: lein deps
+
+      - name: Build uberjar
+        run: lein uberjar
+
+      - name: Create inventory file
+        run: |
+          echo "[webservers]" > "$INVENTORY"
+          echo "$STAGING_HOST" >> "$INVENTORY"
+          chmod 600 "$INVENTORY"
+          
+      - name: Create private key file
+        run: |
+          echo "$SSH_PRIVATE_KEY" > "$PRIVATE_KEY_FILE"
+          chmod 600 "$PRIVATE_KEY_FILE"
+
+      - name: Deploy to staging
+        run: |
+          ansible-playbook \
+          --inventory "$INVENTORY" \
+          --private-key "$PRIVATE_KEY_FILE" \
+          --become \
+          ansible/webserver.yml

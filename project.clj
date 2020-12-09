@@ -6,6 +6,8 @@
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
   :main athenaeum.core
+  :uberjar-name "athenaeum-uber.jar"
+  :jar-name "athenaeum.jar"
   :profiles {:uberjar {:aot :all}
              :cljs    {:source-paths ["src/cljs"]
                        :dependencies [[thheller/shadow-cljs "2.11.8"]

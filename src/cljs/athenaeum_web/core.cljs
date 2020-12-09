@@ -1,6 +1,6 @@
-(ns athenaeum.core
+(ns athenaeum-web.core
   (:require [reagent.dom :as rdom]
-            [athenaeum.views :as v]))
+            [athenaeum-web.views :as v]))
 
 (defn root
   []

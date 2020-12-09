@@ -1,4 +1,4 @@
-(ns athenaeum.views)
+(ns athenaeum-web.views)
 
 (defn home-page
   []

@@ -1,0 +1,50 @@
+---
+- name: Install JRE
+  apt:
+    name: openjdk-11-jre
+
+- name: Create athenaeum user
+  user:
+    name: athenaeum
+  register: athenaeum_user
+
+- set_fact:
+    deploy_user: "{{ athenaeum_user.name }}"
+    deploy_group: "{{ athenaeum_user.group }}"
+
+- name: Make athenaeum dir
+  file:
+    path: /opt/athenaeum
+    state: directory
+    mode: '0755'
+
+- name: Copy uberjar
+  copy:
+    src: target/athenaeum-uber.jar
+    dest: /opt/athenaeum/athenaeum-uber.jar
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: '0644'
+
+- name: Copy config file
+  copy:
+    src: resources/config.edn
+    dest: /opt/athenaeum/config.edn
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: '0644'
+
+- name: Create athenaeum service
+  template:
+    src: athenaeum.service.j2
+    dest: /etc/systemd/system/athenaeum.service
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Enable and restart service
+  systemd:
+    name: athenaeum
+    enabled: yes
+    daemon_reload: yes
+    state: restarted

@@ -1,7 +1,9 @@
 {
   "name": "athenaeum",
   "scripts": {
-    "start": "shadow-cljs watch app"
+    "start": "shadow-cljs watch app",
+    "clean": "rm -rf resources/public/css/ && rm -rf resources/public/js/",
+    "release": "yarn clean && shadow-cljs release app"
   },
   "devDependencies": {
     "shadow-cljs": "^2.11.8"
