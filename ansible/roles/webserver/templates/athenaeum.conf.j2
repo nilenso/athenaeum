@@ -1,0 +1,6 @@
+server{
+	listen 80;
+	location / {
+		proxy-pass http://localhost:8080;
+	}
+}
