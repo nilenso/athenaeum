@@ -1,6 +1,7 @@
 server{
 	listen 80;
+	root /opt/resources/public;
 	location / {
-		proxy-pass http://localhost:8080;
+		proxy_pass http://localhost:8080;
 	}
 }
