@@ -1,12 +1,18 @@
 ---
+
+- name: Create athenaeum user
+  user:
+    system: yes
+    name: athenaeum
+  register: athenaeum_user
+
 - name: Install JRE
   apt:
     name: openjdk-11-jre
 
-- name: Create athenaeum user
-  user:
-    name: athenaeum
-  register: athenaeum_user
+- name: Install Nginx
+  apt:
+    name: nginx
 
 - set_fact:
     deploy_user: "{{ athenaeum_user.name }}"
@@ -20,7 +26,7 @@
 
 - name: Copy uberjar
   copy:
-    src: target/athenaeum-uber.jar
+    src: ../target/athenaeum-uber.jar
     dest: /opt/athenaeum/athenaeum-uber.jar
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"
@@ -28,7 +34,7 @@
 
 - name: Copy config file
   copy:
-    src: resources/config.edn
+    src: ../resources/config.edn
     dest: /opt/athenaeum/config.edn
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"

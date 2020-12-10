@@ -43,10 +43,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Download uberjar
+        id: uberjar
         uses: actions/download-artifact@v2
         with:
           name: athenaeum-uberjar
-          path: target/athenaeum-uber.jar
+          path: target
 
       - name: Create inventory file
         run: |
