@@ -1,7 +1,11 @@
 server{
+
 	listen 80;
-	root /opt/resources/public;
+	root /opt/athenaeum/resources/public;
+
 	location / {
+
 		proxy_pass http://localhost:8080;
+
 	}
 }

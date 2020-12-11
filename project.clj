@@ -6,6 +6,7 @@
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
   :main athenaeum.core
+  :uberjar-exclusions [#"public/*"]
   :uberjar-name "athenaeum-uber.jar"
   :jar-name "athenaeum.jar"
   :profiles {:uberjar {:aot :all}

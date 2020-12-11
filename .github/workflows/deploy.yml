@@ -21,11 +21,18 @@ jobs:
       - name: Build uberjar
         run: lein uberjar
 
-      - name: Upload uberjar
+      - name: Zip uberjar + static files
+        run: |
+          mkdir uberstat
+          mv target/athenaeum-uber.jar uberstat
+          mv resources/public uberstat
+          zip -r uberstat uberstat
+
+      - name: Upload uberjar + static files
         uses: actions/upload-artifact@v2
         with:
-          name: athenaeum-uberjar
-          path: target/athenaeum-uber.jar
+          name: athenaeum-uberstat
+          path: uberstat.zip
 
   deploy-to-staging:
     runs-on: ubuntu-latest
@@ -42,12 +49,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Download uberjar
-        id: uberjar
+      - name: Download uberjar + static files
         uses: actions/download-artifact@v2
         with:
-          name: athenaeum-uberjar
-          path: target
+          name: athenaeum-uberstat
+          path: resources
+
+      - name: Unzip uberjar + static files
+        run: unzip resources/uberstat
 
       - name: Create inventory file
         run: |

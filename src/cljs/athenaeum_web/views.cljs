@@ -3,7 +3,7 @@
 (defn home-page
   []
   [:div
-   [:p "hello world"]])
+   [:p "hello! world"]])
 
 (defn page-not-found
   []
