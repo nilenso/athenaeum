@@ -9,4 +9,4 @@
   (if-let [file-name (first args)]
     (c/load-config file-name)
     (c/load-config))
-  (s/start-app))
+  (s/restart-app))
