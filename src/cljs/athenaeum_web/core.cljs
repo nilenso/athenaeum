@@ -1,7 +1,6 @@
 (ns athenaeum-web.core
   (:require [reagent.dom :as rdom]
             [athenaeum-web.views :as v]
-            [athenaeum-web.events :as e]
             [athenaeum-web.routes :as routes]
             [re-frame.core :as rf]))
 
