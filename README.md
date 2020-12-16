@@ -8,52 +8,56 @@ Track your books
 
 - To run the development build with hot-reloading, install [yarn](https://classic.yarnpkg.com/en/docs/install) and run:
 
-    ```
-    $ yarn install
-    $ yarn start
+    ```shell script
+    yarn install
+    yarn start
     ```
 
-- To generate the release build, run:
+- To generate the release build:
 
+    ```shell script
+    yarn release
     ```
-    $ yarn release
+
+- To run tests, install [node](https://nodejs.org/en/download/) and run:
+
+    ```shell script
+    yarn test
     ```
 
 #### backend setup
 
-- To start up the backend server from the terminal, install [Leiningen](https://leiningen.org/#install) and run:
+- To start the backend server from the terminal, install [Leiningen](https://leiningen.org/#install) and run:
 
-    ```
-    $ lein deps
-    $ lein run
+    ```shell script
+    lein deps
+    lein run
     ```
     or from the REPL:
 
-    ```
-    (athenaeum.config/load-config)
-    (athenaeum.server/start-app)
+    ```clojure
+    (dev.repl-utils/start-app)
     ```
 
     Then navigate to http://localhost:8080/.
 
 - To run tests:
 
-    ```
-    $ lein test
+    ```shell script
+    lein test
     ```
 
 #### linting & formatting
 
 - Install [clj-kondo](https://github.com/borkdude/clj-kondo) and run linter for source and test files:
 
-    ```
-    clj-kondo --lint src/
-    clj-kondo --lint test/
+    ```shell script
+    clj-kondo --lint src/ test/
     ```
 
 - Fix formatting of source code:
 
-    ```
+    ```shell script
     lein cljfmt fix
     ```
 

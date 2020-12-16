@@ -5,8 +5,5 @@
 (defonce config (atom nil))
 
 (defn load-config
-  ([] (load-config "config.edn"))
-  ([file-name]
-   (if-let [config-file (io/resource file-name)]
-     (reset! config (aero/read-config config-file))
-     (reset! config (aero/read-config file-name)))))
+  ([] (load-config "config/config.edn"))
+  ([file-name] (reset! config (aero/read-config file-name))))

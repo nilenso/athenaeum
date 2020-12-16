@@ -4,10 +4,11 @@
                  [bidi "2.1.6"]
                  [aero "1.1.6"]]
   :plugins [[lein-cljfmt "0.7.0"]]
+  :repl-options {:init-ns dev.repl-utils}
   :source-paths ["src/clj"]
   :test-paths ["test/clj"]
   :main athenaeum.core
-  :uberjar-exclusions [#"public/"]
+  :uberjar-exclusions [#"public/" #"src/cljs/" #"test/"]
   :uberjar-name "athenaeum-uber.jar"
   :jar-name "athenaeum.jar"
   :profiles {:uberjar {:aot :all}
