@@ -1,5 +1,7 @@
 {:lein   {:profile "cljs"}
- :builds {:app {:target     :browser
-                :output-dir "resources/public/js"
-                :asset-path "/js"
-                :modules    {:main {:init-fn athenaeum-web.core/run}}}}}
+ :builds {:app  {:target     :browser
+                 :output-dir "resources/public/js"
+                 :asset-path "/js"
+                 :modules    {:main {:init-fn athenaeum-web.core/run}}}
+          :test {:target    :node-test
+                 :output-to "target/test.js"}}}

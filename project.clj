@@ -12,7 +12,8 @@
   :jar-name "athenaeum.jar"
   :profiles {:uberjar {:aot :all}
              :cljs    {:source-paths ["src/cljs" "test/cljs"]
-                       :dependencies [[thheller/shadow-cljs "2.11.8"]
+                       :dependencies [[org.clojure/clojure "1.10.1"]
+                                      [thheller/shadow-cljs "2.11.8"]
                                       [reagent "1.0.0-rc1"]
                                       [kibu/pushy "0.3.8"]
                                       [re-frame "1.1.2"]]}}

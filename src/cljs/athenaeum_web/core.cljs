@@ -2,7 +2,8 @@
   (:require [reagent.dom :as rdom]
             [athenaeum-web.views :as v]
             [athenaeum-web.routes :as routes]
-            [re-frame.core :as rf]))
+            [re-frame.core :as rf]
+            [athenaeum-web.events :as e]))
 
 (defn render
   []
@@ -15,5 +16,6 @@
 
 (defn run
   []
+  (rf/dispatch-sync [::e/initialize-db])
   (routes/init)
   (render))
