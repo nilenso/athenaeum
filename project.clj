@@ -16,5 +16,6 @@
                                       [thheller/shadow-cljs "2.11.8"]
                                       [reagent "1.0.0-rc1"]
                                       [kibu/pushy "0.3.8"]
-                                      [re-frame "1.1.2"]]}}
+                                      [re-frame "1.1.2"]
+                                      [day8.re-frame/test "0.1.5"]]}}
   :cljfmt {:paths ["src" "test"]})
