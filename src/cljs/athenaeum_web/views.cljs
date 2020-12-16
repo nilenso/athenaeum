@@ -1,18 +1,17 @@
 (ns athenaeum-web.views
-  (:require [athenaeum-web.routes :as r]))
+  (:require [re-frame.core :as rf]
+            [athenaeum-web.subscriptions :as s]))
 
 (defn home-page
   []
-  [:div
-   [:p "Hello world"]])
+  [:div "Hello world"])
 
 (defn page-not-found
   []
-  [:div
-   [:p "Page not found."]])
+  [:div "Page not found."])
 
 (defn root
   []
-  (case (get-in @r/app-db [:page :handler])
-    :home-page home-page
-    page-not-found))
+  (case (:handler @(rf/subscribe [::s/current-page]))
+    :home-page [home-page]
+    [page-not-found]))

@@ -8,8 +8,7 @@
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["" h/index]
-        ["api/" [["ping" h/ping]]]
+  ["/" [["api/" [["ping" h/ping]]]
         [true h/index]]])
 
 (def handler
