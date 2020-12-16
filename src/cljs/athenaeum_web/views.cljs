@@ -14,4 +14,5 @@
   []
   (case (:handler @(rf/subscribe [::s/current-page]))
     :home-page [home-page]
+    :not-found [page-not-found]
     [page-not-found]))

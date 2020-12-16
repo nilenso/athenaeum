@@ -8,12 +8,12 @@
 (deftest initialize-db-test
   (testing "When db is initialized, current page should be home-page"
     (rf-test/run-test-sync
-      (rf/dispatch [::e/initialize-db])
-      (is (= {:handler :home-page} @(rf/subscribe [::s/current-page]))))))
+     (rf/dispatch [::e/initialize-db])
+     (is (= {:handler :home-page} @(rf/subscribe [::s/current-page]))))))
 
 (deftest set-current-page-test
   (testing "When set-current-page event is dispatched, current page is in db"
     (rf-test/run-test-sync
-      (rf/dispatch [::e/initialize-db])
-      (rf/dispatch [::e/set-current-page {:handler :test}])
-      (is (= {:handler :test} @(rf/subscribe [::s/current-page]))))))
+     (rf/dispatch [::e/initialize-db])
+     (rf/dispatch [::e/set-current-page {:handler :test}])
+     (is (= {:handler :test} @(rf/subscribe [::s/current-page]))))))
