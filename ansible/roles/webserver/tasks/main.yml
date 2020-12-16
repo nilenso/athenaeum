@@ -33,7 +33,7 @@
 
 - name: Copy config file
   copy:
-    src: ../resources/config.edn
+    src: ../config/config.edn
     dest: /opt/athenaeum/config.edn
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"

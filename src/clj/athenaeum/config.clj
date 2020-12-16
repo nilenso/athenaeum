@@ -1,6 +1,5 @@
 (ns athenaeum.config
-  (:require [clojure.java.io :as io]
-            [aero.core :as aero]))
+  (:require [aero.core :as aero]))
 
 (defonce config (atom nil))
 
