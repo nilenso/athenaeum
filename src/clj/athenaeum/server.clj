@@ -3,17 +3,23 @@
             [athenaeum.handlers :as h]
             [athenaeum.config :as c]
             [bidi.ring :refer (make-handler)]
-            [ring.middleware.resource :refer [wrap-resource]]))
+            [ring.middleware.resource :refer [wrap-resource]]
+            [athenaeum.books.handlers :as bh]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" [["ping" h/ping]]]
+  ["/" [["api/" {"books" {"" {:get  #'bh/fetch
+                              :post #'bh/create}}}]
         [true h/index]]])
 
 (def handler
   (-> routes
       make-handler
+      (wrap-keyword-params)
+      (wrap-params)
       (wrap-resource "public")))
 
 (defn start-app
