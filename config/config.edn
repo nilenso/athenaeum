@@ -1,1 +1,3 @@
-{:ring-server-port 8080}
+{:ring-server-port 8080
+ :db-spec          {:dbtype "postgresql"
+                    :dbname "athenaeum"}}
