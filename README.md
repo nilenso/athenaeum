@@ -49,7 +49,7 @@ Track your books
 
 #### linting & formatting
 
-- Install [clj-kondo](https://github.com/borkdude/clj-kondo) and run linter for source and test files:
+- Install [clj-kondo](https://github.com/borkdude/clj-kondo) and run linter on source and test files:
 
     ```shell script
     clj-kondo --lint src/ test/
