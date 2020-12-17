@@ -13,3 +13,9 @@ pom.xml.asc
 .hg/
 .idea/
 .clj-kondo/.cache
+node_modules
+.shadow-cljs
+resources/public/js
+.DS_Store
+resources/.DS_Store
+resources/public/.DS_Store

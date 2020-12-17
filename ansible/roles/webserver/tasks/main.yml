@@ -1,0 +1,90 @@
+---
+
+- name: Create athenaeum user
+  user:
+    system: yes
+    name: athenaeum
+  register: athenaeum_user
+
+- name: Install JRE and Nginx
+  apt:
+    name:
+      - openjdk-11-jre
+      - nginx
+    state: present
+
+- set_fact:
+    deploy_user: "{{ athenaeum_user.name }}"
+    deploy_group: "{{ athenaeum_user.group }}"
+
+- name: Make athenaeum dir and resources subdir
+  file:
+    path: /opt/athenaeum/resources/public
+    state: directory
+    mode: '0755'
+
+- name: Copy uberjar
+  copy:
+    src: ../uberstat/athenaeum-uber.jar
+    dest: /opt/athenaeum/athenaeum-uber.jar
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: '0644'
+
+- name: Copy config file
+  copy:
+    src: ../config/config.edn
+    dest: /opt/athenaeum/config.edn
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: '0644'
+
+- name: Copy static files
+  copy:
+    src: ../uberstat/public/
+    dest: /opt/athenaeum/resources/public/
+    owner: "{{ deploy_user }}"
+    group: "{{ deploy_group }}"
+    mode: '0644'
+
+- name: Unlink default config
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Add site config to sites-available/
+  template:
+    src: athenaeum.conf.j2
+    dest: /etc/nginx/sites-available/athenaeum.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Create symlink
+  file:
+    src: /etc/nginx/sites-available/athenaeum.conf
+    dest: /etc/nginx/sites-enabled/athenaeum.conf
+    owner: root
+    group: root
+    state: link
+
+- name: Enable and restart Nginx
+  service:
+    name: nginx
+    enabled: yes
+    state: restarted
+
+- name: Create athenaeum service
+  template:
+    src: athenaeum.service.j2
+    dest: /etc/systemd/system/athenaeum.service
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Enable and restart service
+  systemd:
+    name: athenaeum
+    enabled: yes
+    daemon_reload: yes
+    state: restarted

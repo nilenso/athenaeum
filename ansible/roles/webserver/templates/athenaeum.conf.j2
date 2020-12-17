@@ -1,0 +1,18 @@
+server{
+
+	listen 80;
+
+    root /opt/athenaeum/resources/public;
+
+	location /api {
+
+	        proxy_pass http://localhost:8080;
+
+	}
+
+	location / {
+
+            try_files $uri /index.html;
+
+	}
+}

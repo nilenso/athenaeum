@@ -1,16 +1,11 @@
-(ns clj.athenaeum.handlers
-  (:require [compojure.core :as c]
-            [compojure.route :as r]))
+(ns athenaeum.handlers
+  (:require [ring.util.response :as response]))
 
-(defn home-handler
+(defn ping
   [_]
-  "hi world")
+  (response/response "pong"))
 
-(defn ping-handler
+(defn index
   [_]
-  "pong")
-
-(c/defroutes app-handler
-  (c/GET "/" _ home-handler)
-  (c/GET "/ping" _ ping-handler)
-  (r/not-found "page not found"))
+  (-> (response/resource-response "public/index.html")
+      (response/content-type "text/html")))
