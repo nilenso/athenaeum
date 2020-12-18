@@ -1,15 +1,22 @@
 (ns athenaeum.fixtures
   (:require [next.jdbc :as jdbc]
-            [clojure.edn :as edn]
-            [athenaeum.db :as db]))
+            [athenaeum.db :as db]
+            [athenaeum.config :as config]))
 
-(defonce test-config (atom nil))
-
-(defn config-and-datasource
+(defn load-config
   [f]
-  (reset! test-config (edn/read-string (slurp "config/config.test.edn")))
-  (db/set-datasource test-config)
-  (f))
+  (let [previous-config @config/config]
+    (config/load-config (or (System/getenv "TEST_CONFIG_FILE")
+                            "config/config.test.edn"))
+    (f)
+    (config/reset-config previous-config)))
+
+(defn set-datasource
+  [f]
+  (let [previous-datasource @db/datasource]
+    (db/set-datasource)
+    (f)
+    (db/reset-datasource previous-datasource)))
 
 (defn clear-tables
   [f]

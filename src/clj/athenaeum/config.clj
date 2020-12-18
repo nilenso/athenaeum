@@ -4,5 +4,9 @@
 (defonce config (atom nil))
 
 (defn load-config
-  ([] (load-config "config/config.edn"))
-  ([file-name] (reset! config (edn/read-string (slurp file-name)))))
+  [file-name]
+  (reset! config (edn/read-string (slurp file-name))))
+
+(defn reset-config
+  [new-val]
+  (reset! config new-val))
