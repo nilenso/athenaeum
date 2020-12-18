@@ -6,6 +6,7 @@
 (defn start-app
   []
   (c/load-config)
+  ()
   (db/set-datasource c/config)
   (s/start-app))
 

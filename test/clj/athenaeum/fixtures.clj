@@ -13,5 +13,5 @@
 
 (defn clear-tables
   [f]
-  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books CASCADE"])
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books"])
   (f))
