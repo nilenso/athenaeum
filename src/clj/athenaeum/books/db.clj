@@ -2,10 +2,10 @@
   (:require [next.jdbc.sql :as sql]))
 
 (defn create
-  [c name author]
+  [c title author]
   (sql/insert! c
                :books
-               {:name   name
+               {:title  title
                 :author author}))
 
 (defn fetch-all

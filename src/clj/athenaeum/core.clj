@@ -1,14 +1,14 @@
 (ns athenaeum.core
   (:gen-class)
-  (:require [athenaeum.server :as s]
-            [athenaeum.config :as c]
-            [athenaeum.db :as db]))
+  (:require [athenaeum.server :as server]
+            [athenaeum.config :as config]
+            [athenaeum.db :as db]
+            [athenaeum.migrations :as migrations]))
 
 (defn -main
   [& args]
-  (.addShutdownHook (Runtime/getRuntime) (Thread. #(s/stop-app)))
-  (if-let [file-name (first args)]
-    (c/load-config file-name)
-    (c/load-config))
-  (db/set-datasource c/config)
-  (s/restart-app))
+  (config/load-config (first args))
+  (db/set-datasource)
+  (migrations/migrate)
+  (when-not (= "migrate" (second args))
+    (server/restart-app)))

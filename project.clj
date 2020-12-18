@@ -3,7 +3,9 @@
                  [ring "1.8.2"]
                  [bidi "2.1.6"]
                  [seancorfield/next.jdbc "1.1.613"]
-                 [org.postgresql/postgresql "42.2.18"]]
+                 [org.postgresql/postgresql "42.2.18"]
+                 [migratus "1.3.3"]
+                 [ring/ring-json "0.5.0"]]
   :plugins [[lein-cljfmt "0.7.0"]]
   :repl-options {:init-ns dev.repl-utils}
   :source-paths ["src/clj"]
