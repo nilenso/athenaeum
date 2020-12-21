@@ -11,7 +11,7 @@
     name:
       - openjdk-11-jre
       - nginx
-      - postgresql-13.1
+      - postgresql
     state: present
 
 - set_fact:
