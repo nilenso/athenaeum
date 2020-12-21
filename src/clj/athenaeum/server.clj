@@ -1,10 +1,10 @@
 (ns athenaeum.server
   (:require [ring.adapter.jetty :as jetty]
-            [athenaeum.handlers :as handlers]
+            [athenaeum.handlers.core :as html]
             [athenaeum.config :as config]
+            [athenaeum.handlers.book :as book]
             [bidi.ring :refer (make-handler)]
             [ring.middleware.resource :refer [wrap-resource]]
-            [athenaeum.books.handlers :as books-handlers]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.json :refer [wrap-json-response]]))
@@ -12,9 +12,9 @@
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" {"books" {"" {:get  books-handlers/fetch
-                              :post books-handlers/create}}}]
-        [true handlers/index]]])
+  ["/" [["api/" {"books" {"" {:get  book/fetch
+                              :post book/create}}}]
+        [true html/index]]])
 
 (def handler
   (-> routes

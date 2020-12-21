@@ -1,4 +1,4 @@
-(ns athenaeum.handlers
+(ns athenaeum.handlers.core
   (:require [ring.util.response :as response]))
 
 (defn index

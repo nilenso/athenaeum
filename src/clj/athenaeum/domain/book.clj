@@ -1,4 +1,4 @@
-(ns athenaeum.books.db
+(ns athenaeum.domain.book
   (:require [next.jdbc.sql :as sql]))
 
 (defn create
