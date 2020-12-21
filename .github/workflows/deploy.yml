@@ -1,6 +1,9 @@
 name: Build uberjar and deploy to staging
 
-on: push
+on:
+  push:
+    branches:
+      - master
 
 jobs:
   build-uberjar:

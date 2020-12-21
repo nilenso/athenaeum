@@ -10,11 +10,12 @@
 (use-fixtures :each fixtures/clear-tables)
 
 (deftest fetch-test
-  (testing "Returns empty list if db is empty"
+  (testing "Returns empty list when db is empty"
     (let [res (book/fetch {})]
       (is (= 200 (:status res)))
       (is (= [] (:body res)))))
-  (testing "Returns list of all books if any in db"
+
+  (testing "Returns list of books when db is non-empty"
     (let [created-book (jdbc/with-transaction [tx @db/datasource]
                          (domain-book/create tx "test-title" "test-author"))
           res (book/fetch {})]
