@@ -44,6 +44,11 @@ jobs:
       SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
       PRIVATE_KEY_FILE: "ansible/private_key"
       INVENTORY: "ansible/staging"
+      STAGING_CONFIG: ${{secrets.STAGING_CONFIG}}
+      STAGING_CONFIG_FILE: "config/config.staging.edn"
+      POSTGRES_STAGING_USER: ${{secrets.POSTGRES_STAGING_USER}}
+      POSTGRES_STAGING_PWD: ${{secrets.POSTGRES_STAGING_PWD}}
+      POSTGRES_STAGING_DB: ${{secrets.POSTGRES_STAGING_DB}}
       ANSIBLE_HOST_KEY_CHECKING: False
 
     steps:
@@ -57,6 +62,9 @@ jobs:
 
       - name: Unzip uberjar + static files
         run: unzip resources/uberstat
+
+      - name: Create config file
+        run: echo "$STAGING_CONFIG" >> "$STAGING_CONFIG_FILE"
 
       - name: Create inventory file
         run: |
@@ -75,5 +83,9 @@ jobs:
           --user "$STAGING_USER" \
           --inventory "$INVENTORY" \
           --private-key "$PRIVATE_KEY_FILE" \
+          --extra-vars "athenaeum_config=$STAGING_CONFIG_FILE" \
+          --extra-vars "postgres_user=$POSTGRES_STAGING_USER" \
+          --extra-vars "postgres_pwd=$POSTGRES_STAGING_PWD" \
+          --extra-vars "postgres_db=$POSTGRES_STAGING_DB" \
           --become \
           ansible/webserver.yml

@@ -1,7 +1,7 @@
 #!/bin/bash
 
-psql postgres <<EOPSQL
-CREATE USER athenaeum_staging_user WITH PASSWORD 'athenaeum_staging_pwd';
-CREATE DATABASE athenaeum_staging;
-GRANT ALL PRIVILEGES ON DATABASE athenaeum_staging to athenaeum_staging_user;
+sudo -u postgres psql <<EOPSQL
+CREATE USER "$POSTGRES_USER" WITH PASSWORD "$POSTGRES_PWD";
+CREATE DATABASE "$POSTGRES_DB";
+GRANT ALL PRIVILEGES ON DATABASE "$POSTGRES_DB" to "$POSTGRES_USER";
 EOPSQL
