@@ -9,15 +9,6 @@
 (use-fixtures :once fixtures/load-config fixtures/set-datasource)
 (use-fixtures :each fixtures/clear-tables)
 
-(deftest create-test
-  (testing "Adds book given its name and author"
-    (let [req {:params {:title  "test-title"
-                        :author "test-author"}}
-          res (book/create req)]
-      (is (= 200 (:status res)))
-      (is (= "test-title" (:books/title (:body res))))
-      (is (= "test-author" (:books/author (:body res)))))))
-
 (deftest fetch-test
   (testing "Returns empty list if db is empty"
     (let [res (book/fetch {})]

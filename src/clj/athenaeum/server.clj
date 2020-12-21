@@ -12,8 +12,7 @@
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" {"books" {"" {:get  book/fetch
-                              :post book/create}}}]
+  ["/" [["api/" {"books" {"" {:get  book/fetch}}}]
         [true html/index]]])
 
 (def handler
