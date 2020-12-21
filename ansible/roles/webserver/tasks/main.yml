@@ -34,7 +34,7 @@
 
 - name: Copy config file
   copy:
-    src: "{{ athenaeum_config }}"
+    src: ../config/config.staging.edn
     dest: /opt/athenaeum/config.edn
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"
