@@ -86,6 +86,6 @@ jobs:
           --extra-vars "postgres_user=$POSTGRES_STAGING_USER" \
           --extra-vars "postgres_pwd=$POSTGRES_STAGING_PWD" \
           --extra-vars "postgres_db=$POSTGRES_STAGING_DB" \
-          --verbose
+          --verbose \
           --become \
           ansible/webserver.yml
