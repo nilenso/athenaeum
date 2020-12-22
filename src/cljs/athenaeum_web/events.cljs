@@ -11,3 +11,8 @@
  ::initialize-db
  (fn [_ _]
    db/default-db))
+
+(rf/reg-event-db
+  ::set-books-temp
+  (fn [db _]
+    (assoc db :books ["book1" "book2"])))
