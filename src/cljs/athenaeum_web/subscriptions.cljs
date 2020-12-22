@@ -7,6 +7,6 @@
    (get db :page)))
 
 (rf/reg-sub
-  ::books
-  (fn [db _]
-    (get db :books)))
+ ::books
+ (fn [db _]
+   (vals (:books db))))

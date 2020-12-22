@@ -5,9 +5,13 @@
 
 (defn home-page
   []
-  (rf/dispatch [::e/set-books-temp])
+  (rf/dispatch [::e/fetch-books])
   (let [books @(rf/subscribe [::s/books])]
-    [:div books]))
+    [:div
+     [:h3 "Books available:"]
+     [:ul
+      (for [book books]
+        ^{:key (:books/id book)} [:li (:books/title book)])]]))
 
 (defn page-not-found
   []

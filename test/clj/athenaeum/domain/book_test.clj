@@ -16,11 +16,11 @@
 
   (testing "Returns list of books when db is non-empty"
     (let [_book1 (jdbc/with-transaction [tx @db/datasource]
-                  (book/create tx "book1" "author1"))
+                   (book/create tx "book1" "author1"))
           _book2 (jdbc/with-transaction [tx @db/datasource]
-                  (book/create tx "book2" "author2"))
+                   (book/create tx "book2" "author2"))
           _book3 (jdbc/with-transaction [tx @db/datasource]
-                  (book/create tx "book3" "author3"))
+                   (book/create tx "book3" "author3"))
           res (jdbc/with-transaction [tx @db/datasource]
                 (book/fetch-all tx))]
       (is (= 3 (count res)))
