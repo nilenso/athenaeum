@@ -14,10 +14,14 @@
  (fn [_ _]
    db/default-db))
 
+(defn- map-id-to-value
+  [values]
+  (zipmap (map :id values) values))
+
 (rf/reg-event-db
  ::fetch-books-success
  (fn [db [_ books]]
-   (assoc db :books (zipmap (map :books/id books) books))))
+   (assoc db :books (map-id-to-value books))))
 
 (rf/reg-event-db
  ::fetch-books-failure

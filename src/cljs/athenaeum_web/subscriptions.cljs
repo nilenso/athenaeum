@@ -9,4 +9,4 @@
 (rf/reg-sub
  ::books
  (fn [db _]
-   (vals (:books db))))
+   (sort-by :title (vals (:books db)))))

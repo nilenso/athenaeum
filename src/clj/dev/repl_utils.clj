@@ -23,3 +23,9 @@
   []
   (stop-app)
   (start-app))
+
+(defn run-migrations
+  [config-file]
+  (config/load-config config-file)
+  (db/set-datasource)
+  (migrations/migrate))
