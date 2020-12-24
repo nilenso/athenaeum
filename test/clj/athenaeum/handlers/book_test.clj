@@ -1,10 +1,10 @@
 (ns athenaeum.handlers.book-test
   (:require [clojure.test :refer :all]
-            [next.jdbc :as jdbc]
             [athenaeum.fixtures :as fixtures]
             [athenaeum.handlers.book :as book]
             [athenaeum.domain.book :as domain-book]
-            [athenaeum.db :as db]))
+            [athenaeum.db :as db]
+            [athenaeum.test-utils :as tu]))
 
 (use-fixtures :once fixtures/load-config fixtures/set-datasource)
 (use-fixtures :each fixtures/clear-tables)
@@ -16,7 +16,8 @@
       (is (= [] (:body res)))))
 
   (testing "Returns list of books when db is non-empty"
-    (let [created-book (jdbc/with-transaction [tx @db/datasource]
+    (tu/clear-tables)
+    (let [created-book (db/with-transaction [tx @db/datasource]
                          (domain-book/create tx "test-title" "test-author"))
           res (book/fetch {})]
       (is (= 200 (:status res)))

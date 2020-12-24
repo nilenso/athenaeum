@@ -2,6 +2,7 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [ring "1.8.2"]
                  [bidi "2.1.6"]
+                 [camel-snake-kebab "0.4.2"]
                  [seancorfield/next.jdbc "1.1.613"]
                  [org.postgresql/postgresql "42.2.18"]
                  [migratus "1.3.3"]

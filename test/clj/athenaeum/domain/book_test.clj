@@ -1,30 +1,29 @@
 (ns athenaeum.domain.book-test
   (:require [clojure.test :refer :all]
-            [next.jdbc :as jdbc]
             [athenaeum.fixtures :as fixtures]
             [athenaeum.domain.book :as book]
-            [athenaeum.db :as db]))
+            [athenaeum.db :as db]
+            [athenaeum.test-utils :as tu]))
 
 (use-fixtures :once fixtures/load-config fixtures/set-datasource)
 (use-fixtures :each fixtures/clear-tables)
 
 (deftest fetch-all
   (testing "Returns empty list when db is empty"
-    (let [res (jdbc/with-transaction [tx @db/datasource]
+    (let [res (db/with-transaction [tx @db/datasource]
                 (book/fetch-all tx))]
       (is (= [] res))))
 
   (testing "Returns list of books when db is non-empty"
-    (let [_book1 (jdbc/with-transaction [tx @db/datasource]
-                   (book/create tx "book1" "author1"))
-          _book2 (jdbc/with-transaction [tx @db/datasource]
-                   (book/create tx "book2" "author2"))
-          _book3 (jdbc/with-transaction [tx @db/datasource]
-                   (book/create tx "book3" "author3"))
-          res (jdbc/with-transaction [tx @db/datasource]
-                (book/fetch-all tx))]
-      (is (= 3 (count res)))
-      (is (= "book1" (:books/title (first res))))
-      (is (= "author2" (:books/author (second res))))
-      (is (= #:books{:title "book3", :author "author3", :isbn nil, :year_of_publication nil}
-             (dissoc (last res) :books/id))))))
+    (tu/clear-tables)
+    (let [book1 (db/with-transaction [tx @db/datasource]
+                  (book/create tx "book1" "author1"))
+          book2 (db/with-transaction [tx @db/datasource]
+                  (book/create tx "book2" "author2"))
+          book3 (db/with-transaction [tx @db/datasource]
+                  (book/create tx "book3" "author3"))
+          books [book1 book2 book3]
+          returned-books (db/with-transaction [tx @db/datasource]
+                           (book/fetch-all tx))
+          remove-id #(dissoc % :id)]
+      (is (= (map remove-id books) (map remove-id returned-books))))))
