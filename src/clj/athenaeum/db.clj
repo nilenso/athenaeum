@@ -11,7 +11,7 @@
 (defn set-datasource
   []
   (reset! datasource (jdbc/with-options (jdbc/get-datasource (:db-spec @config/config))
-                                        sql-opts)))
+                       sql-opts)))
 
 (defn reset-datasource
   [new-val]
