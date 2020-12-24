@@ -6,12 +6,13 @@
 (defn home-page
   []
   (rf/dispatch [::e/fetch-books])
-  (let [books @(rf/subscribe [::s/books])]
-    [:div
-     [:h3 "Books available:"]
-     [:ul
-      (for [book books]
-        ^{:key (:books/id book)} [:li (:books/title book)])]]))
+  (fn []
+    (let [books @(rf/subscribe [::s/books])]
+      [:div
+       [:h3 "Books available:"]
+       [:ul
+        (for [book books]
+          ^{:key (:id book)} [:li (:title book)])]])))
 
 (defn page-not-found
   []
