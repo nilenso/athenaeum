@@ -5,7 +5,7 @@
             [athenaeum-web.events :as e]))
 
 (def routes
-  ["/" [["" :home-page]
+  ["/" [[""   :home-page]
         [true :not-found]]])
 
 (defonce history (atom nil))
