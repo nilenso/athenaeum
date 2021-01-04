@@ -9,8 +9,7 @@
         [true :not-found]]])
 
 (def page-list
-  [{:handler :home-page :page-name "Home"}
-   {:handler :nowhere :page-name "Nowhere"}])
+  [{:handler :home-page :page-name "Home"}])
 
 (defonce history (atom nil))
 
