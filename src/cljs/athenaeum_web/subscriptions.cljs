@@ -11,4 +11,4 @@
  (fn [db _]
    (->> (:books db)
         (vals)
-        (sort-by :title))))
+        (sort-by :id))))
