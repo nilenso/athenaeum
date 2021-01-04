@@ -8,11 +8,19 @@
   ["/" [[""   :home-page]
         [true :not-found]]])
 
+(def page-list
+  [{:handler :home-page :page-name "Home"}
+   {:handler :nowhere :page-name "Nowhere"}])
+
 (defonce history (atom nil))
 
 (defn set-page
   [page]
   (rf/dispatch [::e/set-current-page page]))
+
+(defn path-for
+  [handler]
+  (b/path-for routes handler))
 
 (defn init
   []
