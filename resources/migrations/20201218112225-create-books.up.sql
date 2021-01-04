@@ -3,5 +3,5 @@ CREATE TABLE IF NOT EXISTS books(
     title text not null,
     author text not null,
     isbn text,
-    year_of_publication int
+    year_of_publication smallint
 );
