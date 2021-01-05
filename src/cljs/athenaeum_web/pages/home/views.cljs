@@ -6,9 +6,11 @@
 (defn home-page
   []
   (let [books @(rf/subscribe [::s/books])]
-    [p/navbar
-     [:div.container
+    [:div
+     [p/navbar]
+     [:div.container.pt-5
       [:h3 "Books available:"]
+      [:br]
       [:table.table.table-hover
        [:thead
         [:tr

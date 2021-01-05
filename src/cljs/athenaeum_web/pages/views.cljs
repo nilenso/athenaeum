@@ -4,16 +4,14 @@
             [athenaeum-web.routes :as r]))
 
 (defn navbar
-  [& children]
-  [:div
-   [:nav.navbar.navbar-light.bg-light.flex-row
-    [:a.navbar-brand.float-left {:href (r/path-for :home-page)} "Athenaeum"]
-    [:div.navbar-nav.flex-row.float-right
-     (for [page r/page-list]
-       [:a {:class (str "nav-item nav-link pr-3 "
-                        (when
+  []
+  [:nav.navbar.navbar-light.bg-light.flex-row
+   [:a.navbar-brand.float-left {:href (r/path-for :home-page)} "Athenaeum"]
+   [:div.navbar-nav.flex-row.float-right
+    (for [page r/page-list]
+      [:a {:class (str "nav-item nav-link pr-3 "
+                       (when
                          (= (:handler page)
                             (:handler @(rf/subscribe [::s/current-page])))
-                          "active"))
-            :href  (r/path-for :home-page)} (:page-name page)])]]
-   children])
+                         "active"))
+           :href  (r/path-for :home-page)} (:page-name page)])]])
