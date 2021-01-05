@@ -3,15 +3,18 @@
             [athenaeum-web.subscriptions :as s]
             [athenaeum-web.routes :as r]))
 
+(defn- page-link
+  [handler page-name]
+  [:a {:class (str "nav-item nav-link pr-3"
+                   (when
+                    (= handler
+                       (:handler @(rf/subscribe [::s/current-page])))
+                     " active"))
+       :href  (r/path-for handler)} page-name])
+
 (defn navbar
   []
   [:nav.navbar.navbar-light.bg-light.flex-row
    [:a.navbar-brand.float-left {:href (r/path-for :home-page)} "Athenaeum"]
    [:div.navbar-nav.flex-row.float-right
-    (for [page r/page-list]
-      [:a {:class (str "nav-item nav-link pr-3 "
-                       (when
-                         (= (:handler page)
-                            (:handler @(rf/subscribe [::s/current-page])))
-                         "active"))
-           :href  (r/path-for :home-page)} (:page-name page)])]])
+    [page-link :home-page "Home"]]])

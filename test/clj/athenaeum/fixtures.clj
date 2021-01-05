@@ -1,7 +1,7 @@
 (ns athenaeum.fixtures
-  (:require [next.jdbc :as jdbc]
-            [athenaeum.db :as db]
-            [athenaeum.config :as config]))
+  (:require [athenaeum.db :as db]
+            [athenaeum.config :as config]
+            [athenaeum.test-utils :as tu]))
 
 (defn load-config
   [f]
@@ -20,5 +20,5 @@
 
 (defn clear-tables
   [f]
-  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books"])
+  (tu/clear-tables)
   (f))

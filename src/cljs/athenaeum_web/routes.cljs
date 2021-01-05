@@ -8,9 +8,6 @@
   ["/" [[""   :home-page]
         [true :not-found]]])
 
-(def page-list
-  [{:handler :home-page :page-name "Home"}])
-
 (defonce history (atom nil))
 
 (defn set-page
