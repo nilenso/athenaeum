@@ -1,0 +1,6 @@
+{:ring-server-port 8080
+ :db-spec          {:dbtype   "postgresql"
+                    :dbname   "athenaeum_dev"
+                    :user     "athenaeum_dev_user"
+                    :password "athenaeum_dev_pwd"
+                    :host     "localhost"}}

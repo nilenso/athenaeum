@@ -1,26 +1,33 @@
 (ns athenaeum.server
-  (:require [ring.adapter.jetty :as r]
-            [athenaeum.handlers :as h]
-            [athenaeum.config :as c]
+  (:require [ring.adapter.jetty :as jetty]
+            [athenaeum.handlers.core :as html]
+            [athenaeum.config :as config]
+            [athenaeum.handlers.book :as book]
             [bidi.ring :refer (make-handler)]
-            [ring.middleware.resource :refer [wrap-resource]]))
+            [ring.middleware.resource :refer [wrap-resource]]
+            [ring.middleware.params :refer [wrap-params]]
+            [ring.middleware.keyword-params :refer [wrap-keyword-params]]
+            [ring.middleware.json :refer [wrap-json-response]]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" [["ping" h/ping]]]
-        [true h/index]]])
+  ["/" [["api/" {"books" {:get book/fetch}}]
+        [true html/index]]])
 
 (def handler
   (-> routes
       make-handler
+      (wrap-json-response)
+      (wrap-keyword-params)
+      (wrap-params)
       (wrap-resource "public")))
 
 (defn start-app
   []
-  (reset! server (r/run-jetty handler {:host  "localhost"
-                                       :port  (:ring-server-port @c/config)
-                                       :join? false})))
+  (reset! server (jetty/run-jetty handler {:host  "localhost"
+                                           :port  (:ring-server-port @config/config)
+                                           :join? false})))
 
 (defn stop-app
   []

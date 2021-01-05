@@ -1,0 +1,5 @@
+{:db-spec {:dbtype   "postgresql"
+           :dbname   "athenaeum_test"
+           :user     "athenaeum_test_user"
+           :password "athenaeum_test_pwd"
+           :host     "localhost"}}

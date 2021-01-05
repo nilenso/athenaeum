@@ -6,11 +6,12 @@
     name: athenaeum
   register: athenaeum_user
 
-- name: Install JRE and Nginx
+- name: Install JRE, Nginx and PostgreSQL
   apt:
     name:
       - openjdk-11-jre
       - nginx
+      - postgresql
     state: present
 
 - set_fact:
@@ -33,7 +34,7 @@
 
 - name: Copy config file
   copy:
-    src: ../config/config.edn
+    src: ../config/config.staging.edn
     dest: /opt/athenaeum/config.edn
     owner: "{{ deploy_user }}"
     group: "{{ deploy_group }}"
@@ -47,7 +48,14 @@
     group: "{{ deploy_group }}"
     mode: '0644'
 
-- name: Unlink default config
+- name: Run script to create user and database
+  script: ../scripts/db_setup.sh
+  environment:
+    POSTGRES_USER: "{{ postgres_user }}"
+    POSTGRES_PWD: "{{ postgres_pwd }}"
+    POSTGRES_DB: "{{ postgres_db }}"
+
+- name: Unlink default Nginx config
   file:
     path: /etc/nginx/sites-enabled/default
     state: absent

@@ -1,9 +1,5 @@
-(ns athenaeum.handlers
+(ns athenaeum.handlers.core
   (:require [ring.util.response :as response]))
-
-(defn ping
-  [_]
-  (response/response "pong"))
 
 (defn index
   [_]

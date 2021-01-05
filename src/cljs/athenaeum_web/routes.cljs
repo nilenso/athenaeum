@@ -5,7 +5,7 @@
             [athenaeum-web.events :as e]))
 
 (def routes
-  ["/" [["" :home-page]
+  ["/" [[""   :home-page]
         [true :not-found]]])
 
 (defonce history (atom nil))
@@ -13,6 +13,10 @@
 (defn set-page
   [page]
   (rf/dispatch [::e/set-current-page page]))
+
+(defn path-for
+  [handler]
+  (b/path-for routes handler))
 
 (defn init
   []

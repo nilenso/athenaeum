@@ -5,10 +5,26 @@ on: push
 jobs:
   run-server-tests:
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:13.1
+        env:
+          POSTGRES_DB: athenaeum_ci
+          POSTGRES_USER: athenaeum_ci_user
+          POSTGRES_PASSWORD: athenaeum_ci_pwd
+        ports:
+          - 5432:5432
+
+    env:
+      TEST_CONFIG_FILE: "config/config.ci.edn"
+
     steps:
       - uses: actions/checkout@v2
       - name: Install dependencies
         run: lein deps
+      - name: Run migrations
+        run: lein run "$TEST_CONFIG_FILE" "migrate"
       - name: Run tests
         run: lein test
 
