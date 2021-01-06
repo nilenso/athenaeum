@@ -12,3 +12,8 @@
    (->> (:books db)
         (vals)
         (sort-by :id))))
+
+(rf/reg-sub
+ ::signin-state
+ (fn [db _]
+   (get db :signin-state)))

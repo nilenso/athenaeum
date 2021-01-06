@@ -4,6 +4,7 @@
                  :asset-path "/js"
                  :modules    {:main {:init-fn athenaeum-web.core/run}}
                  :dev        {:closure-defines {"re_frame.trace.trace_enabled_QMARK_" true}}
-                 :devtools   {:preloads [day8.re-frame-10x.preload]}}
+                 :devtools   {:preloads [day8.re-frame-10x.preload]}
+                 :compiler-options {:infer-externs :auto}}
           :test {:target    :node-test
                  :output-to "target/test.js"}}}

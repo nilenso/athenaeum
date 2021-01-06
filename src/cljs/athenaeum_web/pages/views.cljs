@@ -15,6 +15,6 @@
 (defn navbar
   []
   [:nav.navbar.navbar-light.bg-light.flex-row
-   [:a.navbar-brand.float-left {:href (r/path-for :home-page)} "Athenaeum"]
-   [:div.navbar-nav.flex-row.float-right
-    [page-link :home-page "Home"]]])
+   [:a.navbar-brand {:href (r/path-for :home-page)} "Athenaeum"]
+   [:div.navbar-nav.flex-row
+    [page-link :home-page "home"]]])

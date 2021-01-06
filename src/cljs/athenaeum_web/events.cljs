@@ -18,3 +18,18 @@
  ::initialize-db
  (fn [_ _]
    db/default-db))
+
+(rf/reg-event-db
+ ::signin-user
+ (fn [db [_ name email photo id-token]]
+   (-> db
+       (assoc :user {:name     name
+                     :email    email
+                     :photo    photo
+                     :id-token id-token})
+       (assoc :signin-state :signed-in))))
+
+(rf/reg-event-db
+ ::signout-user
+ (fn [_ _]
+   db/default-db))
