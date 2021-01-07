@@ -1,11 +1,12 @@
 (ns athenaeum-web.home-page.views
   (:require [re-frame.core :as rf]
-            [athenaeum-web.app.subscriptions :as s]
+            [athenaeum-web.app.subscriptions :as subs]
+            [athenaeum-web.home-page.subscriptions :as home-page-subs]
             [athenaeum-web.page.views :as p]))
 
 (defn books-table
   []
-  (let [books @(rf/subscribe [::s/books])]
+  (let [books @(rf/subscribe [::home-page-subs/books])]
     [:table.table.table-hover
      [:thead
       [:tr
@@ -24,7 +25,7 @@
 
 (defn home-page
   []
-  (if (= @(rf/subscribe [::s/login-state]) :logged-in)
+  (if (= @(rf/subscribe [::subs/login-state]) :logged-in)
     [:div
      [p/navbar]
      [:div.container.pt-5

@@ -3,7 +3,9 @@
             [re-frame.core :as rf]
             [athenaeum-web.app.views :as v]
             [athenaeum-web.app.events :as e]
-            [athenaeum-web.routes :as routes]))
+            [athenaeum-web.routes :as routes]
+            [athenaeum-web.home-page.events]
+            [athenaeum-web.app.effects]))
 
 (defn render
   []

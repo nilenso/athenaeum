@@ -2,8 +2,8 @@
   (:require [re-frame.core :as rf]))
 
 (rf/reg-sub
-  ::books
-  (fn [db _]
-    (->> (:books db)
-         (vals)
-         (sort-by :id))))
+ ::books
+ (fn [db _]
+   (->> (:books db)
+        (vals)
+        (sort-by :id))))
