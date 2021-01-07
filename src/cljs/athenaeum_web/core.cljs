@@ -1,9 +1,9 @@
 (ns athenaeum-web.core
   (:require [reagent.dom :as rdom]
-            [athenaeum-web.views :as v]
-            [athenaeum-web.routes :as routes]
             [re-frame.core :as rf]
-            [athenaeum-web.events :as e]))
+            [athenaeum-web.app.views :as v]
+            [athenaeum-web.app.events :as e]
+            [athenaeum-web.routes :as routes]))
 
 (defn render
   []

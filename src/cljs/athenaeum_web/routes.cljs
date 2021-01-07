@@ -2,10 +2,11 @@
   (:require [bidi.bidi :as b]
             [pushy.core :as p]
             [re-frame.core :as rf]
-            [athenaeum-web.events :as e]))
+            [athenaeum-web.app.events :as e]))
 
 (def routes
-  ["/" [[""   :home-page]
+  ["/" [["" :home-page]
+        ["login" :login-page]
         [true :not-found]]])
 
 (defonce history (atom nil))

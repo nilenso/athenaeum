@@ -2,7 +2,7 @@
   (:require [cljs.test :refer-macros [deftest testing is run-tests]]
             [day8.re-frame.test :as rf-test]
             [re-frame.core :as rf]
-            [athenaeum-web.events :as e]
+            [athenaeum-web.events.events :as e]
             [athenaeum-web.events.book :as book-events]
             [athenaeum-web.subscriptions :as s]
             [athenaeum-web.test-utils :as tu]))
