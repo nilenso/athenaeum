@@ -32,4 +32,8 @@
       [:h3 "Books available:"]
       [:br]
       [books-table]]]
-    [p/navbar]))
+    [:div
+     [p/navbar]
+     [:div.text-center.pt-5
+      [:p "You've logged out!"]
+      [:a.btn.btn-primary {:href "/login" :role "button"} "Login"]]]))
