@@ -6,7 +6,8 @@
                  [seancorfield/next.jdbc "1.1.613"]
                  [org.postgresql/postgresql "42.2.18"]
                  [migratus "1.3.3"]
-                 [ring/ring-json "0.5.0"]]
+                 [ring/ring-json "0.5.0"]
+                 [com.google.api-client/google-api-client "1.31.1"]]
   :plugins [[lein-cljfmt "0.7.0"]]
   :repl-options {:init-ns dev.repl-utils}
   :source-paths ["src/clj"]

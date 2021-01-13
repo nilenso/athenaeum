@@ -3,22 +3,25 @@
             [athenaeum.handlers.core :as html]
             [athenaeum.config :as config]
             [athenaeum.handlers.book :as book]
+            [athenaeum.handlers.user :as user]
             [bidi.ring :refer (make-handler)]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [ring.middleware.json :refer [wrap-json-response]]))
+            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" {"books" {:get book/fetch}}]
+  ["/" [["api/" [["books" {:get book/fetch}]
+                 ["login" {:post user/login}]]]
         [true html/index]]])
 
 (def handler
   (-> routes
       make-handler
       (wrap-json-response)
+      (wrap-json-body)
       (wrap-keyword-params)
       (wrap-params)
       (wrap-resource "public")))

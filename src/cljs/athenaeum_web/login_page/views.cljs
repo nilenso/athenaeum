@@ -7,16 +7,13 @@
 
 (defn on-login-success
   [^js google-user]
-  (let [profile (.getBasicProfile google-user)
-        name (.getName profile)
-        email (.getEmail profile)
-        photo (.getImageUrl profile)
-        id-token (.-id_token (.getAuthResponse google-user))]
-    (rf/dispatch [::e/login-user name email photo id-token])))
+  (let [id-token (.-id_token (.getAuthResponse google-user))]
+    (rf/dispatch [::e/add-id-token id-token])
+    (rf/dispatch [::e/send-id-token id-token])))
 
 (defn on-login-failure
   [_]
-  (js/console.error "sign-in failed!"))
+  (js/console.error "login failed!"))
 
 (defn login-button
   []

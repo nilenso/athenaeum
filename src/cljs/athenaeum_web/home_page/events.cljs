@@ -37,7 +37,6 @@
 (rf/reg-event-fx
  ::home-page-navigated
  (fn [{:keys [db]} _]
-   (prn "home page nav event fired")
    (if (= (:login-state db) :logged-in)
      {:fx [[:dispatch [::fetch-books]]]}
      {:fx [[:history-token (routes/path-for :login-page)]]})))
