@@ -9,10 +9,10 @@
             [athenaeum-web.test-utils :as tu]))
 
 (deftest initialize-db-test
-  (testing "When db is initialized, current page should be home-page"
+  (testing "When db is initialized, current login state should be logged out"
     (rf-test/run-test-sync
      (rf/dispatch [::events/initialize-db])
-     (is (= {:handler :home-page} @(rf/subscribe [::subs/current-page]))))))
+     (is (= :logged-out @(rf/subscribe [::subs/login-state]))))))
 
 (deftest set-current-page-test
   (testing "When set-current-page event is dispatched, current page is in db"
