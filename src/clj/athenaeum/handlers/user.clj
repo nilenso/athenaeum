@@ -16,17 +16,22 @@
     (when-let [id-token (.verify ^GoogleIdTokenVerifier verifier ^String id-token-string)]
       (walk/keywordize-keys (into {} (.getPayload id-token))))))
 
+(defn create-session
+  []
+  1)
+
 (defn confirm-login
   [payload]
-  (if (db/with-transaction [tx @db/datasource]
-        (user/fetch-one tx (:sub payload)))
-    1
+  (when-not (db/with-transaction [tx @db/datasource]
+              (user/fetch-one tx (:sub payload)))
     (db/with-transaction [tx @db/datasource]
-      (user/create tx payload))))
+      (user/create tx payload)))
+  (create-session))
 
 (defn login
   [{:keys [headers]}]
   (let [id-token (:id-token (walk/keywordize-keys headers))]
-    (if (verify-id-token id-token)
-      (response/response "login success")
-      (response/bad-request "login failure"))))
+    (if-let [payload (verify-id-token id-token)]
+      (do (confirm-login payload)
+          (response/response {:text "login success"}))
+      (response/bad-request {:text "login failed"}))))

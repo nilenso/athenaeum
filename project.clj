@@ -18,11 +18,12 @@
   :jar-name "athenaeum.jar"
   :profiles {:uberjar {:aot :all}
              :cljs    {:source-paths ["src/cljs" "test/cljs"]
-                       :dependencies [[org.clojure/clojure "1.10.1"]
-                                      [thheller/shadow-cljs "2.11.8"]
-                                      [re-frame "1.1.2"]
-                                      [kibu/pushy "0.3.8"]
-                                      [day8.re-frame/test "0.1.5"]
-                                      [day8.re-frame/re-frame-10x "0.7.0"]
-                                      [day8.re-frame/http-fx "0.2.2"]]}}
+                       :dependencies ^:replace [[org.clojure/clojure "1.10.1"]
+                                                [thheller/shadow-cljs "2.11.8"]
+                                                [re-frame "1.1.2"]
+                                                [bidi "2.1.6"]
+                                                [kibu/pushy "0.3.8"]
+                                                [day8.re-frame/test "0.1.5"]
+                                                [day8.re-frame/re-frame-10x "0.7.0"]
+                                                [day8.re-frame/http-fx "0.2.2"]]}}
   :cljfmt {:paths ["src" "test"]})

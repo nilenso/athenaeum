@@ -9,8 +9,8 @@
 
 (rf/reg-event-db
  ::send-id-token-failure
- (fn [db [_ result]]
-   (assoc db :send-id-token-failure-result result)))
+ (fn [db _]
+   (assoc db :login-state :logged-out)))
 
 (rf/reg-event-fx
  ::send-id-token
