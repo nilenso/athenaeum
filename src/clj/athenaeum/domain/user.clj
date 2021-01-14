@@ -1,10 +1,11 @@
 (ns athenaeum.domain.user
   (:require [next.jdbc.sql :as sql]))
 
-(defn fetch-one
+(defn fetch-by-google-id
   [c google-id]
-  (first (sql/query c
-                    ["SELECT * FROM users WHERE google_id=?" google-id])))
+  (first (sql/find-by-keys c
+                           :users
+                           {:google_id google-id})))
 
 (defn create
   [c user]

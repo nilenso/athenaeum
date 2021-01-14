@@ -24,6 +24,5 @@
 
 (rf/reg-event-db
  ::logout-user
- (fn [db _]
-   (-> (dissoc db :user :books)
-       (assoc :login-state :logged-out))))
+ (fn [_ _]
+   db/default-db))
