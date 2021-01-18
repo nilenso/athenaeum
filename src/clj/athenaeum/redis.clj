@@ -1,4 +1,4 @@
-(ns athenaeum.session.redis
+(ns athenaeum.redis
   (:require [taoensso.carmine :as car]
             [athenaeum.config :as config]))
 
@@ -17,10 +17,13 @@
   (wcar* (car/set key value)
          (car/expire key 3600)))
 
+(defn key-exists?
+  [key]
+  (= 1 (wcar* (car/exists key))))
+
 (defn get-value
   [key]
-  (when (= 1 (wcar* (car/exists key)))
-    (wcar* (car/get key))))
+  (wcar* (car/get key)))
 
 (defn delete-key
   [key]

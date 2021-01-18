@@ -3,7 +3,7 @@
             [clojure.walk :as walk]
             [athenaeum.config :as config]
             [athenaeum.db :as db]
-            [athenaeum.session.core :as session]
+            [athenaeum.session :as session]
             [athenaeum.domain.user :as user])
   (:import (com.google.api.client.googleapis.auth.oauth2 GoogleIdTokenVerifier GoogleIdTokenVerifier$Builder)
            (com.google.api.client.googleapis.javanet GoogleNetHttpTransport)
@@ -43,3 +43,11 @@
       (response/bad-request {:message "login failed"}))
     (response/bad-request {:message "id token header missing"})))
 
+(defn logout
+  [{:keys [cookies]}]
+  (if-let [session-id (get-in cookies ["session-id" :value])]
+    (if (session/exists? session-id)
+      (do (session/delete session-id)
+          (response/response {:message "session deleted"}))
+      (response/bad-request {:message "session doesn't exist"}))
+    (response/bad-request {:message "session id cookie missing"})))

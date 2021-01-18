@@ -1,5 +1,6 @@
 (ns athenaeum-web.app.events
   (:require [re-frame.core :as rf]
+            [ajax.core :as ajax]
             [athenaeum-web.app.db :as db]))
 
 (rf/reg-event-db
@@ -21,9 +22,3 @@
     :fx (if-let [event (on-route-change route)]
           [[:dispatch [event]]]
           [])}))
-
-(rf/reg-event-fx
- ::logout-user
- (fn [_ _]
-   {:db db/default-db
-    :fx (set! (.-location js/document) "/")}))

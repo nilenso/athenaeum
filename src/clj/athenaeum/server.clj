@@ -16,7 +16,8 @@
 
 (def routes
   ["/" [["api/" [["books" {:get book/fetch}]
-                 ["login" {:post user/login}]]]
+                 ["login" {:post user/login}]
+                 ["logout" {:get user/logout}]]]
         [true html/index]]])
 
 (def handler

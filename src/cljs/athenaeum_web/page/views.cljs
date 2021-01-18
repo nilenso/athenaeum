@@ -2,12 +2,12 @@
   (:require [re-frame.core :as rf]
             [athenaeum-web.app.subscriptions :as s]
             [athenaeum-web.routes :as r]
-            [athenaeum-web.app.events :as e]))
+            [athenaeum-web.page.events :as e]))
 
 (defn on-logout
   [_]
   (.then (.signOut (js/gapi.auth2.getAuthInstance))
-         #(rf/dispatch [::e/logout-user])
+         #(rf/dispatch [::e/logout])
          #(js/console.error "logout failed!")))
 
 (defn logout-button
