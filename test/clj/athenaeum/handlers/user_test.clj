@@ -2,7 +2,8 @@
   (:require [clojure.test :refer :all]
             [athenaeum.fixtures :as fixtures]
             [athenaeum.handlers.user :as user]
-            [athenaeum.redis :as redis]))
+            [athenaeum.redis :as redis]
+            [athenaeum.session :as session]))
 
 (use-fixtures :once fixtures/load-config fixtures/set-datasource)
 (use-fixtures :each fixtures/clear-tables)
@@ -10,8 +11,11 @@
 (deftest login-test
   (testing "Returns status 200, adds id-token cookie to response on successful id token verification"
     (let [req {:headers {:id-token "valid-id-token"}}
-          res (with-redefs [user/verify-id-token (constantly true)
-                            user/get-session-id (constantly "new-session-id")]
+          res (with-redefs [user/verify-id-token (constantly {:sub "google-id"
+                                                              :name "name"
+                                                              :email "email"
+                                                              :picture "picture"})
+                            session/new-id (constantly "new-session-id")]
                 (user/login req))]
       (is (= 200 (:status res)))
       (is (= "new-session-id" (get-in res [:cookies "session-id" :value])))))

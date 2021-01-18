@@ -1,6 +1,5 @@
 (ns athenaeum-web.app.events
   (:require [re-frame.core :as rf]
-            [ajax.core :as ajax]
             [athenaeum-web.app.db :as db]))
 
 (rf/reg-event-db

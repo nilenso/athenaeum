@@ -13,7 +13,7 @@
 
 (deftest fetch-test
   (testing "Returns empty list when db is empty"
-    (let [session-id (session/create-and-get-id {})
+    (let [session-id (session/create-and-return-id {})
           req {:cookies {"session-id" {:value session-id}}}
           res (book/fetch req)]
       (redis/delete-key session-id)
@@ -24,7 +24,7 @@
     (tu/clear-tables)
     (let [created-book (db/with-transaction [tx @db/datasource]
                          (domain-book/create tx "test-title" "test-author"))
-          session-id (session/create-and-get-id {})
+          session-id (session/create-and-return-id {})
           req {:cookies {"session-id" {:value session-id}}}
           res (book/fetch req)]
       (redis/delete-key session-id)

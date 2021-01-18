@@ -2,10 +2,14 @@
   (:require [athenaeum.redis :as redis])
   (:import (java.util UUID)))
 
-(defn create-and-get-id
-  [user-data]
-  (let [session user-data
-        session-id (str (UUID/randomUUID))]
+(defn- new-id
+  []
+  (str (UUID/randomUUID)))
+
+(defn create-and-return-id
+  [user-id]
+  (let [session user-id
+        session-id (new-id)]
     (redis/set-key session-id session)
     session-id))
 

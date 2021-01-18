@@ -10,6 +10,7 @@
            (com.google.api.client.json.jackson2 JacksonFactory)))
 
 (defn- verify-id-token
+  "Returns payload map"
   [id-token-string]
   (let [verifier (.build (.setAudience (GoogleIdTokenVerifier$Builder. (GoogleNetHttpTransport/newTrustedTransport)
                                                                        (JacksonFactory.))
@@ -18,13 +19,19 @@
                              (catch Exception _ nil))]
       (walk/keywordize-keys (into {} (.getPayload id-token))))))
 
-(defn- get-session-id
+(defn find-or-create-user
+  "Returns user id"
   [payload]
-  (when-not (db/with-transaction [tx @db/datasource]
-              (user/fetch-by-google-id tx (:sub payload)))
-    (db/with-transaction [tx @db/datasource]
-      (user/create tx payload)))
-  (session/create-and-get-id payload))
+  (if-let [user (db/with-transaction [tx @db/datasource]
+                  (user/fetch-by-google-id tx (:sub payload)))]
+    (:id user)
+    (:id (db/with-transaction [tx @db/datasource]
+           (user/create tx payload)))))
+
+(defn- create-session
+  "Returns session id"
+  [user-id]
+  (session/create-and-return-id user-id))
 
 (defn- set-session-id-cookie
   [response session-id]
@@ -38,8 +45,8 @@
   [{:keys [headers]}]
   (if-let [id-token (:id-token (walk/keywordize-keys headers))]
     (if-let [payload (verify-id-token id-token)]
-      (-> (response/response {:message "login success"})
-          (set-session-id-cookie (get-session-id payload)))
+      (set-session-id-cookie (response/response {:message "login success"})
+                             (create-session (find-or-create-user payload)))
       (response/bad-request {:message "login failed"}))
     (response/bad-request {:message "id token header missing"})))
 
