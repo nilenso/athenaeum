@@ -1,7 +1,8 @@
 {:ring-server-port 8080
+ :redis-host       "127.0.0.1"
  :db-spec          {:dbtype   "postgresql"
                     :dbname   "athenaeum_dev"
                     :user     "athenaeum_dev_user"
                     :password "athenaeum_dev_pwd"
                     :host     "localhost"}
- :oauth {:google {:client-id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}}}
+ :oauth            {:google {:client-id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}}}

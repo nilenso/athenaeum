@@ -7,22 +7,22 @@
 (use-fixtures :each fixtures/clear-tables)
 
 (deftest login-test
-  (testing "Returns status 200 on successful id token verification"
+  (testing "Returns status 200, adds id-token cookie to response on successful id token verification"
     (let [req {:headers {:id-token "valid-id-token"}}
           res (with-redefs [user/verify-id-token (constantly true)
-                            user/confirm-login (constantly true)]
+                            user/get-session-id (constantly "new-session-id")]
                 (user/login req))]
       (is (= 200 (:status res)))
-      (is (= "login success" (get-in res [:body :text])))))
+      (is (= "new-session-id" (get-in res [:cookies "session-id" :value])))))
 
   (testing "Returns status 400 if invalid id token is passed"
     (let [req {:headers {:id-token "invalid-id-token"}}
           res (user/login req)]
       (is (= 400 (:status res)))
-      (is (= "login failed" (get-in res [:body :text])))))
+      (is (= "login failed" (get-in res [:body :message])))))
 
   (testing "Returns status 400 if id-token header is missing"
     (let [req {}
           res (user/login req)]
       (is (= 400 (:status res)))
-      (is (= "Id token header missing" (get-in res [:body :text]))))))
+      (is (= "id token header missing" (get-in res [:body :message]))))))

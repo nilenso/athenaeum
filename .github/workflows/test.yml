@@ -15,6 +15,10 @@ jobs:
           POSTGRES_PASSWORD: athenaeum_ci_pwd
         ports:
           - 5432:5432
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
 
     env:
       TEST_CONFIG_FILE: "config/config.ci.edn"

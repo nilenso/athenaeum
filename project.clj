@@ -7,7 +7,8 @@
                  [org.postgresql/postgresql "42.2.18"]
                  [migratus "1.3.3"]
                  [ring/ring-json "0.5.0"]
-                 [com.google.api-client/google-api-client "1.31.1"]]
+                 [com.google.api-client/google-api-client "1.31.1"]
+                 [com.taoensso/carmine "3.1.0"]]
   :plugins [[lein-cljfmt "0.7.0"]]
   :repl-options {:init-ns dev.repl-utils}
   :source-paths ["src/clj"]

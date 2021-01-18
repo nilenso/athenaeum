@@ -8,7 +8,9 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]))
+            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
+            [ring.middleware.cookies :refer [wrap-cookies]]
+            [ring.middleware.session.cookie]))
 
 (defonce server (atom nil))
 
@@ -24,6 +26,7 @@
       (wrap-json-body)
       (wrap-keyword-params)
       (wrap-params)
+      (wrap-cookies)
       (wrap-resource "public")))
 
 (defn start-app

@@ -1,9 +1,10 @@
 (ns athenaeum.handlers.user
   (:require [ring.util.response :as response]
-            [athenaeum.domain.user :as user]
-            [athenaeum.db :as db]
+            [clojure.walk :as walk]
             [athenaeum.config :as config]
-            [clojure.walk :as walk])
+            [athenaeum.db :as db]
+            [athenaeum.session.core :as session]
+            [athenaeum.domain.user :as user])
   (:import (com.google.api.client.googleapis.auth.oauth2 GoogleIdTokenVerifier GoogleIdTokenVerifier$Builder)
            (com.google.api.client.googleapis.javanet GoogleNetHttpTransport)
            (com.google.api.client.json.jackson2 JacksonFactory)))
@@ -17,23 +18,28 @@
                              (catch Exception _ nil))]
       (walk/keywordize-keys (into {} (.getPayload id-token))))))
 
-(defn- create-session
-  []
-  1)
-
-(defn- confirm-login
+(defn- get-session-id
   [payload]
   (when-not (db/with-transaction [tx @db/datasource]
               (user/fetch-by-google-id tx (:sub payload)))
     (db/with-transaction [tx @db/datasource]
       (user/create tx payload)))
-  (create-session))
+  (session/create-and-get-id payload))
+
+(defn- set-session-id-cookie
+  [response session-id]
+  (response/set-cookie response
+                       "session-id"
+                       session-id
+                       {:same-site :strict
+                        :max-age   3600}))
 
 (defn login
   [{:keys [headers]}]
   (if-let [id-token (:id-token (walk/keywordize-keys headers))]
     (if-let [payload (verify-id-token id-token)]
-      (do (confirm-login payload)
-          (response/response {:text "login success"}))
-      (response/bad-request {:text "login failed"}))
-    (response/bad-request {:text "Id token header missing"})))
+      (-> (response/response {:message "login success"})
+          (set-session-id-cookie (get-session-id payload)))
+      (response/bad-request {:message "login failed"}))
+    (response/bad-request {:message "id token header missing"})))
+
