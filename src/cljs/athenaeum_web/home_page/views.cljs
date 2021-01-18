@@ -25,15 +25,10 @@
 
 (defn home-page
   []
-  (if (= @(rf/subscribe [::subs/login-state]) :logged-in)
+  (when (= @(rf/subscribe [::subs/login-state]) :logged-in)
     [:div
      [p/navbar]
      [:div.container.pt-5
       [:h3 "Books available:"]
       [:br]
-      [books-table]]]
-    [:div
-     [p/navbar]
-     [:div.text-center.pt-5
-      [:p "You've logged out!"]
-      [:a.btn.btn-primary {:href "/login" :role "button"} "Login"]]]))
+      [books-table]]]))

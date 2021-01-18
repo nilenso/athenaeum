@@ -12,7 +12,7 @@
 
 (defn logout-button
   []
-  [:button.btn.btn-outline-secondary {:onClick on-logout} "Log out"])
+  [:button.btn.btn-outline-secondary {:on-click on-logout} "Log out"])
 
 (defn- page-link
   [handler page-name]

@@ -22,7 +22,8 @@
           [[:dispatch [event]]]
           [])}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::logout-user
  (fn [_ _]
-   db/default-db))
+   {:db db/default-db
+    :fx (set! (.-location js/document) "/")}))
