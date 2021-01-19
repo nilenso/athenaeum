@@ -29,7 +29,7 @@
                  :on-success      [::fetch-books-success]
                  :on-failure      [::fetch-books-failure]}}))
 
-(defmethod e/on-route-change
+(defmethod e/on-route-change-event
   :home-page
   [_]
   ::home-page-navigated)
@@ -38,5 +38,5 @@
  ::home-page-navigated
  (fn [{:keys [db]} _]
    (if (= (:login-state db) :logged-in)
-     {:fx [[:dispatch [::fetch-books]]]}
-     {:fx [[:history-token (routes/path-for :login-page)]]})))
+     {:dispatch [::fetch-books]}
+     {:fx [[:navigate-to (routes/path-for :login-page)]]})))

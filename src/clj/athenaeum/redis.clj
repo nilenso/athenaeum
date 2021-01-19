@@ -13,9 +13,11 @@
   `(car/wcar @server-conn ~@body))
 
 (defn set-key
-  [key value]
-  (wcar* (car/set key value)
-         (car/expire key 3600)))
+  ([key value]
+   (set-key key value 3600))
+  ([key value ttl]
+   (wcar* (car/set key value)
+          (car/expire key ttl))))
 
 (defn key-exists?
   [key]

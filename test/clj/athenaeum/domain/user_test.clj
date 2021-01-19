@@ -14,22 +14,13 @@
           user (db/with-transaction [tx @db/datasource]
                  (user/create tx {:sub     google-id
                                   :name    "name"
-                                  :email   "email"
-                                  :picture "picture"}))
+                                  :email   "email"}))
           returned-user (db/with-transaction [tx @db/datasource]
-                          (user/fetch-by-google-id tx google-id))
-          remove-id #(dissoc % :id)]
-      (is (= (remove-id user) (remove-id returned-user)))))
+                          (user/fetch-by-google-id tx google-id))]
+      (is (= user returned-user))))
 
   (testing "If record with given google id does not exist, return nil"
     (tu/clear-tables)
-    (let [google-id-1 "test-id-1"
-          _user (db/with-transaction [tx @db/datasource]
-                  (user/create tx {:sub     google-id-1
-                                   :name    "name"
-                                   :email   "email"
-                                   :picture "picture"}))
-          google-id-2 "test-id-2"
-          returned-user (db/with-transaction [tx @db/datasource]
-                          (user/fetch-by-google-id tx google-id-2))]
+    (let [returned-user (db/with-transaction [tx @db/datasource]
+                          (user/fetch-by-google-id tx "test-id"))]
       (is (= nil returned-user)))))

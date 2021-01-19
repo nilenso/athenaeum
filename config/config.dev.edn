@@ -1,5 +1,6 @@
 {:ring-server-port 8080
  :redis-host       "127.0.0.1"
+ :session-ttl      3600
  :db-spec          {:dbtype   "postgresql"
                     :dbname   "athenaeum_dev"
                     :user     "athenaeum_dev_user"

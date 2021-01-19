@@ -9,7 +9,7 @@
   [^js google-user]
   (let [id-token (.-id_token (.getAuthResponse google-user))]
     (rf/dispatch [::e/add-id-token id-token])
-    (rf/dispatch [::e/send-id-token id-token])))
+    (rf/dispatch [::e/login id-token])))
 
 (defn on-login-failure
   [_]

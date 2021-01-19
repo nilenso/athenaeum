@@ -4,4 +4,4 @@
 
 (defn clear-tables
   []
-  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books"]))
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books, users"]))

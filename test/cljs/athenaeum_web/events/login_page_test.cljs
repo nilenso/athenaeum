@@ -6,15 +6,15 @@
             [athenaeum-web.login-page.events :as login-page-events]
             [athenaeum-web.app.subscriptions :as subs]))
 
-(deftest send-id-token-test
+(deftest login-test
   (testing "On successfully verifying id token, login state should be logged in"
     (rf-test/run-test-sync
-     (tu/stub-api-call {:foo "bar"} true)
-     (rf/dispatch [::login-page-events/send-id-token "test-token"])
+     (tu/stub-api-call {} true)
+     (rf/dispatch [::login-page-events/login "test-token"])
      (is (= :logged-in @(rf/subscribe [::subs/login-state])))))
 
   (testing "On failing to verify id token, login state should be logged out"
     (rf-test/run-test-sync
-     (tu/stub-api-call {:foo "bar"} false)
-     (rf/dispatch [::login-page-events/send-id-token "test-token"])
+     (tu/stub-api-call {} false)
+     (rf/dispatch [::login-page-events/login "test-token"])
      (is (= :logged-out @(rf/subscribe [::subs/login-state]))))))

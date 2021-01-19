@@ -7,10 +7,10 @@
  (fn [_ _]
    db/default-db))
 
-(defmulti on-route-change :handler :default :default)
+(defmulti on-route-change-event :handler :default ::default)
 
-(defmethod on-route-change
-  :default
+(defmethod on-route-change-event
+  ::default
   [_]
   nil)
 
@@ -18,6 +18,6 @@
  ::set-current-page
  (fn [{:keys [db]} [_ route]]
    {:db (assoc db :page route)
-    :fx (if-let [event (on-route-change route)]
+    :fx (if-let [event (on-route-change-event route)]
           [[:dispatch [event]]]
           [])}))
