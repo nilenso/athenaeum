@@ -8,10 +8,11 @@
                            {:google_id google-id})))
 
 (defn create
+  "google id, name, email are non-null values"
   [c user]
   (sql/insert! c
                :users
-               {:google_id (:sub user)
+               {:google_id (:google-id user)
                 :name      (:name user)
                 :email     (:email user)
-                :photo_url (:picture user)}))
+                :photo_url (:photo-url user)}))

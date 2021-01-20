@@ -18,7 +18,7 @@
  ::logout-success
  (fn [_ _]
    {:db db/default-db
-    :fx [[:navigate-to (routes/path-for :home-page)]]}))
+    :fx [[:navigate-to (routes/path-for :login-page)]]}))
 
 (rf/reg-event-db
  ::logout-failure

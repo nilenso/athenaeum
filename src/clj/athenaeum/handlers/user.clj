@@ -9,21 +9,34 @@
            (com.google.api.client.googleapis.javanet GoogleNetHttpTransport)
            (com.google.api.client.json.jackson2 JacksonFactory)))
 
+(defn- reformat-payload
+  [payload]
+  {:google-id (:sub payload)
+   :email     (:email payload)
+   :name      (:name payload)
+   :domain    (:hd payload)
+   :photo-url (:picture payload)})
+
 (defn- verify-id-token
   "Returns payload map"
   [id-token-string]
   (let [verifier (.build (.setAudience (GoogleIdTokenVerifier$Builder. (GoogleNetHttpTransport/newTrustedTransport)
                                                                        (JacksonFactory.))
                                        [(get-in @config/config [:oauth :google :client-id])]))]
-    (when-let [id-token (try (.verify ^GoogleIdTokenVerifier verifier ^String id-token-string)
+    (when-let [id-token (try (.verify ^GoogleIdTokenVerifier verifier
+                                      ^String id-token-string)
                              (catch Exception _ nil))]
-      (walk/keywordize-keys (into {} (.getPayload id-token))))))
+      (->> id-token
+           (.getPayload)
+           (into {})
+           (walk/keywordize-keys)
+           (reformat-payload)))))
 
 (defn find-or-create-user
   "Returns user id"
   [payload]
   (if-let [user (db/with-transaction [tx @db/datasource]
-                  (user/fetch-by-google-id tx (:sub payload)))]
+                  (user/fetch-by-google-id tx (:google-id payload)))]
     (:id user)
     (:id (db/with-transaction [tx @db/datasource]
            (user/create tx payload)))))
@@ -45,8 +58,11 @@
   [{:keys [headers]}]
   (if-let [id-token (:id-token (walk/keywordize-keys headers))]
     (if-let [payload (verify-id-token id-token)]
-      (set-session-id-cookie (response/response {:message "login success"})
-                             (create-session (find-or-create-user payload)))
+      (if (= (:domain payload) "nilenso.com")
+        (set-session-id-cookie (response/response {:message "login success"})
+                               (create-session (find-or-create-user payload)))
+        (-> (response/response {:message "invalid domain"})
+            (response/status 401)))
       (response/bad-request {:message "login failed"}))
     (response/bad-request {:message "id token header missing"})))
 
@@ -58,3 +74,8 @@
           (response/response {:message "session deleted"}))
       (response/bad-request {:message "session doesn't exist"}))
     (response/bad-request {:message "session id cookie missing"})))
+
+(defn session
+  [{:keys [cookies]}]
+  (when-let [session-id (get-in cookies ["session-id" :value])]
+    (response/response (session/exists? session-id))))

@@ -11,14 +11,27 @@
 (deftest login-test
   (testing "Returns status 200, adds id-token cookie to response on successful id token verification"
     (let [req {:headers {:id-token "valid-id-token"}}
-          res (with-redefs [user/verify-id-token (constantly {:sub "google-id"
-                                                              :name "name"
-                                                              :email "email"
-                                                              :picture "picture"})
+          res (with-redefs [user/verify-id-token (constantly {:google-id "google-id"
+                                                              :name      "name"
+                                                              :email     "name@nilenso.com"
+                                                              :domain    "nilenso.com"
+                                                              :photo-url "picture"})
                             session/new-id (constantly "new-session-id")]
                 (user/login req))]
       (is (= 200 (:status res)))
       (is (= "new-session-id" (get-in res [:cookies "session-id" :value])))))
+
+  (testing "Returns status 401 if email domain is not nilenso.com"
+    (let [req {:headers {:id-token "valid-id-token"}}
+          res (with-redefs [user/verify-id-token (constantly {:google-id "google-id"
+                                                              :name      "name"
+                                                              :email     "name@foo.bar"
+                                                              :domain    "foo.bar"
+                                                              :picture   "picture"})
+                            session/new-id (constantly "new-session-id")]
+                (user/login req))]
+      (is (= 401 (:status res)))
+      (is (= "invalid domain" (get-in res [:body :message])))))
 
   (testing "Returns status 400 if invalid id token is passed"
     (let [req {:headers {:id-token "invalid-id-token"}}
