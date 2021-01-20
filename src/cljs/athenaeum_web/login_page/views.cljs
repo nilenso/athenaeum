@@ -28,14 +28,9 @@
 
 (defn login-page
   []
-  (if (= @(rf/subscribe [::s/login-state]) :logged-out)
+  (when (= @(rf/subscribe [::s/login-state]) :logged-out)
     [:div
      [p/navbar]
      [:div.d-flex.align-items-center.flex-column.pt-5
       [:p "Click here to sign in with Google"]
-      [login-button]]]
-    [:div
-     [p/navbar]
-     [:div.text-center.pt-5
-      [:p "You've logged in! Click here to go home"]
-      [:a.btn.btn-primary {:href "/" :role "button"} "Home"]]]))
+      [login-button]]]))

@@ -6,4 +6,4 @@
 (rf/reg-fx
  :navigate-to
  (fn [token]
-   (p/replace-token! @r/history token)))
+   (p/set-token! @r/history token)))
