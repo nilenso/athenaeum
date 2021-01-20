@@ -27,9 +27,14 @@
     (f)
     (redis/reset-conn previous-conn)))
 
+(defn- truncate-all-tables
+  []
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books CASCADE"])
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE users CASCADE"]))
+
 (defn clear-tables
   [f]
-  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books, users"])
+  (truncate-all-tables)
   (f))
 
 (defn clear-sessions

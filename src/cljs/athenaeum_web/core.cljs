@@ -19,5 +19,6 @@
 (defn run
   []
   (rf/dispatch-sync [::e/initialize-db])
+  ;(rf/dispatch-sync [::e/session])
   (routes/init)
   (render))

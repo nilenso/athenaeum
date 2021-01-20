@@ -10,15 +10,26 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.cookies :refer [wrap-cookies]]
-            [ring.middleware.session.cookie]))
+            [athenaeum.middleware :as middleware]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" [["books" {:get book/fetch}]
-                 ["login" {:post user/login}]
-                 ["logout" {:get user/logout}]]]
+  ["/" [["api/" [["books" {:get (middleware/wrap-require-session-id-cookie
+                                  book/fetch)}]
+                 ["login" {:post (middleware/wrap-require-id-token-header
+                                   user/login)}]
+                 ["logout" {:get (middleware/wrap-require-session-id-cookie
+                                   user/logout)}]
+                 ["me" {:get user/session}]]]
         [true html/index]]])
+
+#_(def routes
+    ["/" [["api/" [["books" {:get book/fetch}]]]
+          ["user/" [["login" {:post user/login}]
+                    ["logout" {:get user/logout}]
+                    ["me" {:get user/session}]]]
+          [true html/index]]])
 
 (def handler
   (-> routes

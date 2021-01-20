@@ -49,33 +49,35 @@
 (defn- set-session-id-cookie
   [response session-id]
   (response/set-cookie response
-                       "session-id"
+                       :session-id
                        session-id
                        {:same-site :strict
                         :max-age   3600}))
 
 (defn login
   [{:keys [headers]}]
-  (if-let [id-token (:id-token (walk/keywordize-keys headers))]
+  (let [id-token (:id-token headers)]
     (if-let [payload (verify-id-token id-token)]
       (if (= (:domain payload) "nilenso.com")
         (set-session-id-cookie (response/response {:message "login success"})
                                (create-session (find-or-create-user payload)))
         (-> (response/response {:message "invalid domain"})
             (response/status 401)))
-      (response/bad-request {:message "login failed"}))
-    (response/bad-request {:message "id token header missing"})))
+      (response/bad-request {:message "login failed"}))))
 
 (defn logout
   [{:keys [cookies]}]
-  (if-let [session-id (get-in cookies ["session-id" :value])]
+  (let [session-id (get-in cookies [:session-id :value])]
     (if (session/exists? session-id)
       (do (session/delete session-id)
           (response/response {:message "session deleted"}))
-      (response/bad-request {:message "session doesn't exist"}))
-    (response/bad-request {:message "session id cookie missing"})))
+      (response/bad-request {:message "session doesn't exist"}))))
 
 (defn session
   [{:keys [cookies]}]
-  (when-let [session-id (get-in cookies ["session-id" :value])]
-    (response/response (session/exists? session-id))))
+  (if-let [session-id (get-in cookies [:session-id :value])]
+    (if (session/exists? session-id)
+      (response/response {:session true})
+      (-> (response/response {:session false})
+          (response/status 401)))
+    (response/bad-request {:message "session id cookie missing"})))

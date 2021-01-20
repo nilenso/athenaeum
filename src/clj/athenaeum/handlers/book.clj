@@ -6,10 +6,9 @@
 
 (defn fetch
   [{:keys [cookies]}]
-  (if-let [session-id (get-in cookies ["session-id" :value])]
+  (let [session-id (get-in cookies [:session-id :value])]
     (if-let [_session (session/fetch session-id)]
       (db/with-transaction [tx @db/datasource]
         (response/response (books/fetch-all tx)))
       (-> (response/response {:message "invalid authentication credentials. login and retry."})
-          (response/status 401)))
-    (response/bad-request {:message "Session id cookie missing"})))
+          (response/status 401)))))
