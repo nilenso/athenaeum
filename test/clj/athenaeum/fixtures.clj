@@ -2,7 +2,8 @@
   (:require [athenaeum.db :as db]
             [athenaeum.config :as config]
             [athenaeum.redis :as redis]
-            [next.jdbc :as jdbc]))
+            [next.jdbc :as jdbc]
+            [athenaeum.session :as session]))
 
 (defn load-config
   [f]
@@ -31,7 +32,7 @@
   (jdbc/execute! @db/datasource ["TRUNCATE TABLE books, users"])
   (f))
 
-(defn clear-redis
+(defn clear-sessions
   [f]
-  (redis/delete-all-keys)
+  (session/delete-all-sessions)
   (f))

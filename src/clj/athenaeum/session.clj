@@ -7,7 +7,8 @@
   []
   (str (UUID/randomUUID)))
 
-(defn create-and-return-id
+(defn create
+  "returns id of created session"
   [user-id]
   (let [session user-id
         session-id (new-id)]
@@ -25,3 +26,7 @@
 (defn delete
   [session-id]
   (redis/delete-key session-id))
+
+(defn delete-all-sessions
+  []
+  (redis/delete-all-keys))

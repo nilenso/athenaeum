@@ -44,7 +44,7 @@
 (defn- create-session
   "Returns session id"
   [user-id]
-  (session/create-and-return-id user-id))
+  (session/create user-id))
 
 (defn- set-session-id-cookie
   [response session-id]

@@ -5,33 +5,33 @@
             [athenaeum.domain.book :as domain-book]
             [athenaeum.db :as db]
             [athenaeum.session :as session]
-            [athenaeum.redis :as redis]
             [athenaeum.test-utils :as tu]))
 
 (use-fixtures :once fixtures/load-config fixtures/set-datasource fixtures/set-redis-server-conn)
-(use-fixtures :each fixtures/clear-tables fixtures/clear-redis)
+(use-fixtures :each fixtures/clear-tables fixtures/clear-sessions)
 
 (deftest fetch-test
-  (testing "Returns empty list when db is empty"
-    (let [session-id (session/create-and-return-id {})
+  (testing "When user is logged in, returns list of available books"
+    (let [created-book (db/with-transaction [tx @db/datasource]
+                         (domain-book/create tx "test-title" "test-author"))
+          session-id (session/create {})
           req {:cookies {"session-id" {:value session-id}}}
           res (book/fetch req)]
       (is (= 200 (:status res)))
-      (is (= [] (:body res)))))
+      (is (= [created-book] (:body res)))))
 
-  (testing "Returns list of books when db is non-empty"
+  (testing "When user is logged in and db is empty, returns empty list "
     (tu/with-fixtures
-      [fixtures/clear-tables fixtures/clear-redis]
-      (let [created-book (db/with-transaction [tx @db/datasource]
-                           (domain-book/create tx "test-title" "test-author"))
-            session-id (session/create-and-return-id {})
+      [fixtures/clear-tables fixtures/clear-sessions]
+      (let [session-id (session/create "valid-session")
             req {:cookies {"session-id" {:value session-id}}}
             res (book/fetch req)]
-        (redis/delete-key session-id)
         (is (= 200 (:status res)))
-        (is (= [created-book] (:body res))))))
+        (is (= [] (:body res))))))
 
-  (testing "If cookie contains invalid session id, respond with status 401"
-    (let [req {:cookies {"session-id" {:value "invalid-session-id"}}}
-          res (book/fetch req)]
-      (is (= 401 (:status res))))))
+  (testing "When user is not logged in, returns status 401"
+    (tu/with-fixtures
+      [fixtures/clear-tables fixtures/clear-sessions]
+      (let [req {:cookies {"session-id" {:value "invalid-session-id"}}}
+            res (book/fetch req)]
+        (is (= 401 (:status res)))))))
