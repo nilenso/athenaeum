@@ -3,11 +3,13 @@
             [athenaeum.config :as config]
             [athenaeum.db :as db]
             [ring.adapter.jetty :as jetty]
-            [athenaeum.migrations :as migrations]))
+            [athenaeum.migrations :as migrations]
+            [athenaeum.redis :as redis]))
 
 (defn start-app
   []
   (config/load-config "config/config.dev.edn")
+  (redis/set-conn-opts)
   (db/set-datasource)
   (migrations/migrate)
   (reset! server/server (jetty/run-jetty #'server/handler

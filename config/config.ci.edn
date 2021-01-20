@@ -1,5 +1,7 @@
-{:db-spec {:dbtype   "postgresql"
-           :dbname   "athenaeum_ci"
-           :user     "athenaeum_ci_user"
-           :password "athenaeum_ci_pwd"
-           :host     "localhost"}}
+{:redis-host  "127.0.0.1"
+ :session-ttl 300
+ :db-spec     {:dbtype   "postgresql"
+               :dbname   "athenaeum_ci"
+               :user     "athenaeum_ci_user"
+               :password "athenaeum_ci_pwd"
+               :host     "localhost"}}

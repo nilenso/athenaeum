@@ -6,7 +6,11 @@
 
 (defn set-conn-opts
   []
-  (reset! server-conn {:pool {}, :spec {:host {:redis-host @config/config}}}))
+  (reset! server-conn {:pool {}, :spec {:host (:redis-host @config/config)}}))
+
+(defn reset-conn
+  [new-val]
+  (reset! server-conn new-val))
 
 (defmacro wcar*
   [& body]

@@ -4,24 +4,21 @@
             [athenaeum.handlers.book :as book]
             [athenaeum.domain.book :as domain-book]
             [athenaeum.db :as db]
-            [athenaeum.test-utils :as tu]
             [athenaeum.session :as session]
             [athenaeum.redis :as redis]))
 
-(use-fixtures :once fixtures/load-config fixtures/set-datasource)
-(use-fixtures :each fixtures/clear-tables)
+(use-fixtures :once fixtures/load-config fixtures/set-datasource fixtures/set-redis-server-conn)
+(use-fixtures :each fixtures/clear-tables fixtures/clear-redis)
 
 (deftest fetch-test
   (testing "Returns empty list when db is empty"
     (let [session-id (session/create-and-return-id {})
           req {:cookies {"session-id" {:value session-id}}}
           res (book/fetch req)]
-      (redis/delete-key session-id)
       (is (= 200 (:status res)))
       (is (= [] (:body res)))))
 
   (testing "Returns list of books when db is non-empty"
-    (tu/clear-tables)
     (let [created-book (db/with-transaction [tx @db/datasource]
                          (domain-book/create tx "test-title" "test-author"))
           session-id (session/create-and-return-id {})

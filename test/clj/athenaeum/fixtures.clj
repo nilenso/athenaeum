@@ -1,7 +1,8 @@
 (ns athenaeum.fixtures
   (:require [athenaeum.db :as db]
             [athenaeum.config :as config]
-            [athenaeum.test-utils :as tu]))
+            [athenaeum.redis :as redis]
+            [next.jdbc :as jdbc]))
 
 (defn load-config
   [f]
@@ -18,7 +19,19 @@
     (f)
     (db/reset-datasource previous-datasource)))
 
+(defn set-redis-server-conn
+  [f]
+  (let [previous-conn @redis/server-conn]
+    (redis/set-conn-opts)
+    (f)
+    (redis/reset-conn previous-conn)))
+
 (defn clear-tables
   [f]
-  (tu/clear-tables)
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books, users"])
+  (f))
+
+(defn clear-redis
+  [f]
+  (redis/delete-all-keys)
   (f))
