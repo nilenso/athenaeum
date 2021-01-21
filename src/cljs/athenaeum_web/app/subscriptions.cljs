@@ -10,3 +10,8 @@
  ::login-state
  (fn [db _]
    (get db :login-state)))
+
+(rf/reg-sub
+  ::user
+  (fn [db _]
+    (get db :user)))

@@ -39,7 +39,7 @@
  (fn [db [_ user]]
    (-> db
        (assoc :login-state :logged-in)
-       (assoc :user user))))
+       (assoc :user (:user user)))))
 
 (rf/reg-event-db
  ::fetch-user-failure
