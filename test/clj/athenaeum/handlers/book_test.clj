@@ -14,7 +14,7 @@
   (testing "When user is logged in, returns list of available books"
     (let [created-book (db/with-transaction [tx @db/datasource]
                          (domain-book/create tx "test-title" "test-author"))
-          session-id (session/create {})
+          session-id (session/create "1")
           req {:cookies {:session-id {:value session-id}}}
           res (book/fetch req)]
       (is (= 200 (:status res)))
@@ -23,7 +23,7 @@
   (testing "When user is logged in and db is empty, returns empty list "
     (tu/with-fixtures
       [fixtures/clear-tables fixtures/clear-sessions]
-      (let [session-id (session/create "valid-session")
+      (let [session-id (session/create "1")
             req {:cookies {:session-id {:value session-id}}}
             res (book/fetch req)]
         (is (= 200 (:status res)))
@@ -32,6 +32,6 @@
   (testing "When user is not logged in, returns status 401"
     (tu/with-fixtures
       [fixtures/clear-tables fixtures/clear-sessions]
-      (let [req {:cookies {:session-id {:value "invalid-session-id"}}}
+      (let [req {:cookies {:session-id {:value "1"}}}
             res (book/fetch req)]
         (is (= 401 (:status res)))))))

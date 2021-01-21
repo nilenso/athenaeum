@@ -7,7 +7,7 @@
 (defn fetch
   [{:keys [cookies]}]
   (let [session-id (get-in cookies [:session-id :value])]
-    (if-let [_session (session/fetch session-id)]
+    (if (session/fetch session-id)
       (db/with-transaction [tx @db/datasource]
         (response/response (books/fetch-all tx)))
       (-> (response/response {:message "invalid authentication credentials. login and retry."})

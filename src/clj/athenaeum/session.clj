@@ -21,7 +21,8 @@
 
 (defn fetch
   [session-id]
-  (Integer/parseInt (redis/get-value session-id)))
+  (when-let [user-id (redis/get-value session-id)]
+    (Integer/parseInt user-id)))
 
 (defn delete
   [session-id]

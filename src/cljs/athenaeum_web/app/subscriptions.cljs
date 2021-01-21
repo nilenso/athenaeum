@@ -12,6 +12,6 @@
    (get db :login-state)))
 
 (rf/reg-sub
-  ::user
-  (fn [db _]
-    (get db :user)))
+ ::user
+ (fn [db _]
+   (get db :user)))

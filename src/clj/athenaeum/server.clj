@@ -16,13 +16,13 @@
 
 (def routes
   ["/" [["api/" [["books" {:get (middleware/wrap-require-session-id-cookie
-                                  book/fetch)}]
+                                 book/fetch)}]
                  ["user/" [["login" {:post (middleware/wrap-require-id-token-header
-                                             user/login)}]
+                                            user/login)}]
                            ["logout" {:get (middleware/wrap-require-session-id-cookie
-                                             user/logout)}]
+                                            user/logout)}]
                            ["me" {:get (middleware/wrap-require-session-id-cookie
-                                         user/user)}]]]]]
+                                        user/user)}]]]]]
         [true html/index]]])
 
 (def handler
