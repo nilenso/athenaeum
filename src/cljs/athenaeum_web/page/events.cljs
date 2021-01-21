@@ -8,7 +8,7 @@
  ::logout
  (fn [_ _]
    {:http-xhrio {:method          :get
-                 :uri             "/api/logout"
+                 :uri             "/api/user/logout"
                  :timeout         8000
                  :response-format (ajax/json-response-format {:keywords? true})
                  :on-success      [::logout-success]

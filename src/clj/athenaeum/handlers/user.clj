@@ -52,7 +52,8 @@
                        :session-id
                        session-id
                        {:same-site :strict
-                        :max-age   3600}))
+                        :max-age   3600
+                        :path "/api"}))
 
 (defn login
   [{:keys [headers]}]
@@ -63,7 +64,7 @@
                                (create-session (find-or-create-user payload)))
         (-> (response/response {:message "invalid domain"})
             (response/status 401)))
-      (response/bad-request {:message "login failed"}))))
+      (response/bad-request {:message "id token verification failed"}))))
 
 (defn logout
   [{:keys [cookies]}]

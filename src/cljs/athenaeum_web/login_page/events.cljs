@@ -19,7 +19,7 @@
  ::login
  (fn [_ [_ id-token]]
    {:http-xhrio {:method          :post
-                 :uri             "/api/login"
+                 :uri             "/api/user/login"
                  :headers         {:id-token id-token}
                  :timeout         8000
                  :format          (ajax/json-request-format)

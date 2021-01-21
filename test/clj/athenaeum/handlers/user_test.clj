@@ -58,4 +58,4 @@
       (let [req {:cookies {:session-id {:value "invalid-session-id"}}}
             res (user/logout req)]
         (is (= 400 (:status res)))
-        (is (= "session doesn't exist" (get-in res [:body :message])))))))
+        (is (= "session does not exist" (get-in res [:body :message])))))))
