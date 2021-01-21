@@ -15,7 +15,7 @@
     (let [created-book (db/with-transaction [tx @db/datasource]
                          (domain-book/create tx "test-title" "test-author"))
           session-id (session/create {})
-          req {:cookies {"session-id" {:value session-id}}}
+          req {:cookies {:session-id {:value session-id}}}
           res (book/fetch req)]
       (is (= 200 (:status res)))
       (is (= [created-book] (:body res)))))
@@ -24,7 +24,7 @@
     (tu/with-fixtures
       [fixtures/clear-tables fixtures/clear-sessions]
       (let [session-id (session/create "valid-session")
-            req {:cookies {"session-id" {:value session-id}}}
+            req {:cookies {:session-id {:value session-id}}}
             res (book/fetch req)]
         (is (= 200 (:status res)))
         (is (= [] (:body res))))))
@@ -32,6 +32,6 @@
   (testing "When user is not logged in, returns status 401"
     (tu/with-fixtures
       [fixtures/clear-tables fixtures/clear-sessions]
-      (let [req {:cookies {"session-id" {:value "invalid-session-id"}}}
+      (let [req {:cookies {:session-id {:value "invalid-session-id"}}}
             res (book/fetch req)]
         (is (= 401 (:status res)))))))

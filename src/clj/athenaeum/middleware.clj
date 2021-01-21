@@ -17,18 +17,18 @@
       (response/bad-request {:message "id token header missing"}))))
 
 (defn wrap-keywordize-cookies-and-headers
-  [handler]
+  [f handler]
   (fn [{:keys [headers cookies] :as request}]
     (let [headers (walk/keywordize-keys headers)
           cookies (walk/keywordize-keys cookies)]
-      (handler (-> request
-                   (assoc :headers headers)
-                   (assoc :cookies cookies))))))
+      ((f handler) (-> request
+                       (assoc :headers headers)
+                       (assoc :cookies cookies))))))
 
 (def wrap-require-id-token-header
-  (comp wrap-require-id-token-header*
-        wrap-keywordize-cookies-and-headers))
+  (fn [handler]
+    (wrap-keywordize-cookies-and-headers wrap-require-id-token-header* handler)))
 
 (def wrap-require-session-id-cookie
-  (comp wrap-require-session-id-cookie*
-        wrap-keywordize-cookies-and-headers))
+  (fn [handler]
+    (wrap-keywordize-cookies-and-headers wrap-require-session-id-cookie* handler)))

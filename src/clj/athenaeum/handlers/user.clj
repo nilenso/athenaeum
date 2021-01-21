@@ -75,9 +75,8 @@
 
 (defn session
   [{:keys [cookies]}]
-  (if-let [session-id (get-in cookies [:session-id :value])]
+  (let [session-id (get-in cookies [:session-id :value])]
     (if (session/exists? session-id)
       (response/response {:session true})
       (-> (response/response {:session false})
-          (response/status 401)))
-    (response/bad-request {:message "session id cookie missing"})))
+          (response/status 401)))))
