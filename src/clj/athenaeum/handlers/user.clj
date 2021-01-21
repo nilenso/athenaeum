@@ -32,7 +32,7 @@
            (walk/keywordize-keys)
            (reformat-payload)))))
 
-(defn find-or-create-user
+(defn- find-or-create-user
   "Returns user id"
   [payload]
   (if-let [user (db/with-transaction [tx @db/datasource]
@@ -72,12 +72,15 @@
     (if (session/exists? session-id)
       (do (session/delete session-id)
           (response/response {:message "session deleted"}))
-      (response/bad-request {:message "session doesn't exist"}))))
+      (response/bad-request {:message "session does not exist"}))))
 
-(defn session
+(defn user
   [{:keys [cookies]}]
   (let [session-id (get-in cookies [:session-id :value])]
     (if (session/exists? session-id)
-      (response/response {:session true})
-      (-> (response/response {:session false})
+      (let [user-id (session/fetch session-id)
+            user (db/with-transaction [tx @db/datasource]
+                   (user/fetch-by-id tx user-id))]
+        (response/response {:user user}))
+      (-> (response/response {:message "session does not exist"})
           (response/status 401)))))

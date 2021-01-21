@@ -22,7 +22,7 @@
                            ["logout" {:get (middleware/wrap-require-session-id-cookie
                                              user/logout)}]
                            ["me" {:get (middleware/wrap-require-session-id-cookie
-                                         user/session)}]]]]]
+                                         user/user)}]]]]]
         [true html/index]]])
 
 (def handler

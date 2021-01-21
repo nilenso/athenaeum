@@ -21,7 +21,7 @@
 
 (defn fetch
   [session-id]
-  (redis/get-value session-id))
+  (Integer/parseInt (redis/get-value session-id)))
 
 (defn delete
   [session-id]

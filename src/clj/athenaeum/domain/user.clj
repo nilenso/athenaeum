@@ -1,6 +1,12 @@
 (ns athenaeum.domain.user
   (:require [next.jdbc.sql :as sql]))
 
+(defn fetch-by-id
+  [c id]
+  (sql/get-by-id c
+                 :users
+                 id))
+
 (defn fetch-by-google-id
   [c google-id]
   (first (sql/find-by-keys c

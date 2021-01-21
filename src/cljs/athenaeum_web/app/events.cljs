@@ -3,10 +3,11 @@
             [athenaeum-web.app.db :as db]
             [ajax.core :as ajax]))
 
-(rf/reg-event-db
+(rf/reg-event-fx
  ::initialize-db
  (fn [_ _]
-   db/default-db))
+   {:db       db/default-db
+    :dispatch [::fetch-user]}))
 
 (defmulti on-route-change-event :handler :default ::default)
 
@@ -24,21 +25,23 @@
           [])}))
 
 (rf/reg-event-fx
- ::session
+ ::fetch-user
  (fn [_ _]
    {:http-xhrio {:method          :get
-                 :uri             "/api/me"
+                 :uri             "/api/user/me"
                  :timeout         8000
                  :response-format (ajax/json-response-format {:keywords? true})
-                 :on-success      [::session-exists]
-                 :on-failure      [::session-absent]}}))
+                 :on-success      [::fetch-user-success]
+                 :on-failure      [::fetch-user-failure]}}))
 
 (rf/reg-event-db
- ::session-exists
- (fn [db _]
-   (assoc db :login-state :logged-in)))
+ ::fetch-user-success
+ (fn [db [_ user]]
+   (-> db
+       (assoc :login-state :logged-in)
+       (assoc :user user))))
 
 (rf/reg-event-db
- ::session-absent
+ ::fetch-user-failure
  (fn [db _]
    (assoc db :login-state :logged-out)))
