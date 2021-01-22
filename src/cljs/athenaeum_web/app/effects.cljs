@@ -4,6 +4,6 @@
             [athenaeum-web.routes :as r]))
 
 (rf/reg-fx
- :navigate-to
+ ::navigate-to
  (fn [token]
    (p/set-token! @r/history token)))

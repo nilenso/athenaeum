@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [ajax.core :as ajax]
             [athenaeum-web.app.db  :as db]
-            [athenaeum-web.routes :as routes]))
+            [athenaeum-web.routes :as routes]
+            [athenaeum-web.app.effects :as effects]))
 
 (rf/reg-event-fx
  ::logout
@@ -18,7 +19,7 @@
  ::logout-success
  (fn [_ _]
    {:db db/default-db
-    :fx [[:navigate-to (routes/path-for :login-page)]]}))
+    :fx [[::effects/navigate-to (routes/path-for :login-page)]]}))
 
 (rf/reg-event-db
  ::logout-failure

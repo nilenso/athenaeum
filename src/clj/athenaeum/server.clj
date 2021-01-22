@@ -10,6 +10,7 @@
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
             [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
             [ring.middleware.cookies :refer [wrap-cookies]]
+            [ring.middleware.content-type :refer [wrap-content-type]]
             [athenaeum.middleware :as middleware]))
 
 (defonce server (atom nil))
@@ -33,7 +34,8 @@
       (wrap-keyword-params)
       (wrap-params)
       (wrap-cookies)
-      (wrap-resource "public")))
+      (wrap-resource "public")
+      (wrap-content-type)))
 
 (defn start-app
   []
