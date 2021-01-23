@@ -7,12 +7,10 @@
             [athenaeum-web.test-utils :as tu]))
 
 (deftest initialize-db-test
-  (testing "When db is initialized, login state is initialized to logged-out and user is fetched"
+  (testing "When db is initialized, user is logged out"
     (rf-test/run-test-sync
-     (let [fetch-user-event (tu/stub-event ::events/fetch-user)]
-       (rf/dispatch [::events/initialize-db])
-       (is (= :logged-out @(rf/subscribe [::subs/login-state])))
-       (is (= [::events/fetch-user] @fetch-user-event))))))
+      (rf/dispatch [::events/initialize-db])
+      (is (= :logged-out @(rf/subscribe [::subs/login-state]))))))
 
 (deftest set-current-page-test
   (testing "When dispatched, current page is set in db"

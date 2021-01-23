@@ -35,9 +35,10 @@
        (rf/dispatch [::home-page-events/home-page-navigated])
        (is (= [::home-page-events/fetch-books] @fetch-books-event)))))
 
-  (testing "When home page is navigated and user is logged in, login page is navigated"
+  (testing "When home page is navigated and user is logged out, user is fetched"
     (rf-test/run-test-sync
      (let [navigate-to-effect-params (tu/stub-effect ::effects/navigate-to)]
        (tu/initialize-db)
+       (tu/stub-api-call {} false)
        (rf/dispatch [::home-page-events/home-page-navigated])
        (is (= ["/login"] @navigate-to-effect-params))))))

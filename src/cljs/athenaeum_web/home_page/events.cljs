@@ -40,4 +40,9 @@
  (fn [{:keys [db]} _]
    (if (= (:login-state db) :logged-in)
      {:dispatch [::fetch-books]}
-     {:fx [[::effects/navigate-to (routes/path-for :login-page)]]})))
+     {:dispatch [::e/fetch-user ::fetch-books ::redirect-to-login]})))
+
+(rf/reg-event-fx
+ ::redirect-to-login
+ (fn [_ _]
+   {:fx [[::effects/navigate-to (routes/path-for :login-page)]]}))
