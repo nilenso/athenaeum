@@ -9,8 +9,8 @@
 (deftest initialize-db-test
   (testing "When db is initialized, user is logged out"
     (rf-test/run-test-sync
-      (rf/dispatch [::events/initialize-db])
-      (is (= :logged-out @(rf/subscribe [::subs/login-state]))))))
+     (rf/dispatch [::events/initialize-db])
+     (is (= :logged-out @(rf/subscribe [::subs/login-state]))))))
 
 (deftest set-current-page-test
   (testing "When dispatched, current page is set in db"

@@ -17,8 +17,8 @@
 
 (rf/reg-event-fx
  ::logout-success
- (fn [_ _]
-   {:db db/default-db
+ (fn [{:keys [db]} _]
+   {:db (assoc db/default-db :auth2-loaded (:auth2-loaded db))
     :fx [[::effects/navigate-to (routes/path-for :login-page)]]}))
 
 (rf/reg-event-db

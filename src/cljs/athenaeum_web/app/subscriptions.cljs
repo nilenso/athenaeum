@@ -15,3 +15,8 @@
  ::user
  (fn [db _]
    (get db :user)))
+
+(rf/reg-sub
+ ::auth2-loaded
+ (fn [db _]
+   (get db :auth2-loaded)))

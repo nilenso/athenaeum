@@ -50,5 +50,11 @@
 
 (rf/reg-event-fx
  ::fetch-user-failure
- (fn [db _]
-   (assoc db :login-state :logged-out)))
+ (fn [{:keys [db]} [_ event _]]
+   {:db       (assoc db :login-state :logged-out)
+    :dispatch [event]}))
+
+(rf/reg-event-db
+ ::auth2-loaded-status
+ (fn [db [_ status]]
+   (assoc db :auth2-loaded status)))

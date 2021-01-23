@@ -2,4 +2,5 @@
 
 (def default-db
   {:login-state :logged-out
-   :page        {:handler :home-page}})
+   :page        {:handler :home-page}
+   :auth2-loaded false})
