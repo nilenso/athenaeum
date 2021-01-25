@@ -1,15 +1,14 @@
 (ns athenaeum-web.login-page.views
   (:require [reagent.core :as r]
             [re-frame.core :as rf]
-            [athenaeum-web.login-page.events :as e]
-            [athenaeum-web.app.subscriptions :as s]
-            [athenaeum-web.page.views :as p]))
+            [athenaeum-web.login-page.events :as login-page-events]
+            [athenaeum-web.app.subscriptions :as subs]
+            [athenaeum-web.page.views :as page]))
 
 (defn on-login-success
   [^js google-user]
   (let [id-token (.-id_token (.getAuthResponse google-user))]
-    (rf/dispatch [::e/add-id-token id-token])
-    (rf/dispatch [::e/login id-token])))
+    (rf/dispatch [::login-page-events/login id-token])))
 
 (defn on-login-failure
   [_]
@@ -28,9 +27,9 @@
 
 (defn login-page
   []
-  (when (= @(rf/subscribe [::s/login-state]) :logged-out)
+  (when (= @(rf/subscribe [::subs/login-state]) :logged-out)
     [:div
-     [p/navbar]
+     [page/navbar]
      [:div.d-flex.align-items-center.flex-column.pt-5
       [:p "Click here to sign in with Google"]
       [login-button]]]))

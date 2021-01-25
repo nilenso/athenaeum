@@ -8,6 +8,23 @@
             [athenaeum-web.app.subscriptions :as subs]
             [athenaeum-web.app.effects :as effects]))
 
+(deftest login-page-navigated-test
+  (testing "When login page is navigated and user is logged in, home page is set"
+    (rf-test/run-test-sync
+     (let [navigate-to-params (tu/stub-effect ::effects/navigate-to)]
+       (tu/initialize-db)
+       (swap! rf-db/app-db assoc :login-state :logged-in)
+       (rf/dispatch [::login-page-events/login-page-navigated])
+       (is (= ["/"] @navigate-to-params)))))
+
+  (testing "When login page is navigated and user is logged in, nothing happens"
+    (rf-test/run-test-sync
+     (let [db-before @rf-db/app-db]
+       (tu/initialize-db)
+       (swap! rf-db/app-db assoc :login-state :logged-out)
+       (rf/dispatch [::login-page-events/login-page-navigated])
+       (is @rf-db/app-db db-before)))))
+
 (deftest login-test
   (testing "On successful login, login state should be set to logged-in and set home page"
     (rf-test/run-test-sync
@@ -24,12 +41,3 @@
      (tu/stub-api-call {} false)
      (rf/dispatch [::login-page-events/login "test-token"])
      (is (= :logged-out @(rf/subscribe [::subs/login-state]))))))
-
-(deftest login-page-navigated-test
-  (testing "When login page is navigated and user is logged in, home page is set"
-    (rf-test/run-test-sync
-     (let [navigate-to-params (tu/stub-effect ::effects/navigate-to)]
-       (tu/initialize-db)
-       (swap! rf-db/app-db assoc :login-state :logged-in)
-       (rf/dispatch [::login-page-events/login-page-navigated])
-       (is (= ["/"] @navigate-to-params))))))

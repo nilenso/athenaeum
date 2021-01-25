@@ -2,7 +2,7 @@
   (:require [bidi.bidi :as b]
             [pushy.core :as p]
             [re-frame.core :as rf]
-            [athenaeum-web.app.events :as e]))
+            [athenaeum-web.app.events.routing :as routing-events]))
 
 (def routes
   ["/" [["" :home-page]
@@ -13,7 +13,7 @@
 
 (defn set-page
   [page]
-  (rf/dispatch [::e/set-current-page page]))
+  (rf/dispatch [::routing-events/set-current-page page]))
 
 (defn path-for
   [handler]

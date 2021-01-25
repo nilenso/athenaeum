@@ -2,10 +2,10 @@
   (:require [re-frame.core :as rf]
             [ajax.core :as ajax]
             [athenaeum-web.routes :as routes]
-            [athenaeum-web.app.events :as e]
+            [athenaeum-web.app.events.routing :as routing-events]
             [athenaeum-web.app.effects :as effects]))
 
-(defmethod e/on-route-change-event
+(defmethod routing-events/on-route-change-event
   :login-page
   [_]
   ::login-page-navigated)
@@ -38,8 +38,3 @@
  ::login-failure
  (fn [db _]
    (assoc db :login-state :logged-out)))
-
-(rf/reg-event-db
- ::add-id-token
- (fn [db [_ id-token]]
-   (assoc-in db [:user :id-token] id-token)))

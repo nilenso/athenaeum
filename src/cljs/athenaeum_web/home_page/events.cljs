@@ -1,14 +1,19 @@
 (ns athenaeum-web.home-page.events
   (:require [re-frame.core :as rf]
-            [day8.re-frame.http-fx]
             [ajax.core :as ajax]
-            [athenaeum-web.routes :as routes]
-            [athenaeum-web.app.events :as e]
-            [athenaeum-web.app.effects :as effects]))
+            [athenaeum-web.utils :as utils]
+            [athenaeum-web.app.events.routing :as routing-events]
+            [athenaeum-web.app.events.authentication :as authentication-events]))
 
-(defn- map-id-to-value
-  [values]
-  (zipmap (map :id values) values))
+(defmethod routing-events/on-route-change-event
+  :home-page
+  [_]
+  ::home-page-navigated)
+
+(rf/reg-event-fx
+ ::home-page-navigated
+ (fn [_ _]
+   {:dispatch [::authentication-events/authentication-check ::fetch-books]}))
 
 (rf/reg-event-fx
  ::fetch-books
@@ -23,26 +28,9 @@
 (rf/reg-event-db
  ::fetch-books-success
  (fn [db [_ books]]
-   (assoc db :books (map-id-to-value books))))
+   (assoc db :books (utils/map-id-to-value books))))
 
 (rf/reg-event-db
  ::fetch-books-failure
  (fn [db _]
    db))
-
-(defmethod e/on-route-change-event
-  :home-page
-  [_]
-  ::home-page-navigated)
-
-(rf/reg-event-fx
- ::home-page-navigated
- (fn [{:keys [db]} _]
-   (if (= (:login-state db) :logged-in)
-     {:dispatch [::fetch-books]}
-     {:dispatch [::e/fetch-user ::fetch-books ::redirect-to-login]})))
-
-(rf/reg-event-fx
- ::redirect-to-login
- (fn [_ _]
-   {:fx [[::effects/navigate-to (routes/path-for :login-page)]]}))
