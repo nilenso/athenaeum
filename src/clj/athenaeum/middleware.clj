@@ -1,6 +1,7 @@
 (ns athenaeum.middleware
   (:require [clojure.walk :as walk]
-            [ring.util.response :as response]))
+            [ring.util.response :as response]
+            [athenaeum.session :as session]))
 
 (defn wrap-require-session-id-cookie*
   [handler]
@@ -38,3 +39,15 @@
          (catch Exception _
            (-> (response/response {:message "Internal server error"})
                (response/status 500))))))
+
+(defn wrap-require-session*
+  [handler]
+  (fn [{:keys [cookies] :as request}]
+    (if (session/fetch (get-in cookies [:session-id :value]))
+      (handler request)
+      (-> (response/response {:message "session does not exist. login and retry."})
+          (response/status 401)))))
+
+(def wrap-require-session
+  (comp wrap-require-session-id-cookie
+        wrap-require-session*))

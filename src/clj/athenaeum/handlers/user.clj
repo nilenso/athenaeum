@@ -69,18 +69,13 @@
 (defn logout
   [{:keys [cookies]}]
   (let [session-id (get-in cookies [:session-id :value])]
-    (if (session/exists? session-id)
-      (do (session/delete session-id)
-          (response/response {:message "session deleted"}))
-      (response/bad-request {:message "session does not exist"}))))
+    (session/delete session-id)
+    (response/response {:message "session deleted"})))
 
 (defn user
   [{:keys [cookies]}]
-  (let [session-id (get-in cookies [:session-id :value])]
-    (if (session/exists? session-id)
-      (let [user-id (session/fetch session-id)
-            user (db/with-transaction [tx @db/datasource]
-                   (user/fetch-by-id tx user-id))]
-        (response/response {:user user}))
-      (-> (response/response {:message "session does not exist"})
-          (response/status 401)))))
+  (let [session-id (get-in cookies [:session-id :value])
+        user-id (session/fetch session-id)
+        user (db/with-transaction [tx @db/datasource]
+               (user/fetch-by-id tx user-id))]
+    (response/response {:user user})))

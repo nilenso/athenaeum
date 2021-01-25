@@ -2,8 +2,10 @@
   (:require [clojure.test :refer :all]
             [athenaeum.fixtures :as fixtures]
             [athenaeum.handlers.user :as user]
+            [athenaeum.domain.user :as domain-user]
             [athenaeum.session :as session]
-            [athenaeum.test-utils :as tu]))
+            [athenaeum.test-utils :as tu]
+            [athenaeum.db :as db]))
 
 (use-fixtures :once fixtures/load-config fixtures/set-datasource fixtures/set-redis-server-conn)
 (use-fixtures :each fixtures/clear-tables fixtures/clear-sessions)
@@ -44,18 +46,25 @@
       (is (= "id token verification failed" (get-in res [:body :message]))))))
 
 (deftest logout-test
-  (testing "If session id in cookie has corresponding session, deletes it and returns status 200"
+  (testing "Deletes session corresponding to session id in cookie and returns status 200"
     (let [session-id (with-redefs [session/new-id (constantly "valid-session-id")]
                        (session/create "valid-session"))
           req {:cookies {:session-id {:value session-id}}}
           res (user/logout req)]
       (is (= 200 (:status res)))
-      (is (= false (session/exists? session-id)))))
+      (is (= false (session/exists? session-id))))))
 
-  (testing "If session doesn't exist, returns status 400"
-    (tu/with-fixtures
-      [fixtures/clear-sessions]
-      (let [req {:cookies {:session-id {:value "invalid-session-id"}}}
-            res (user/logout req)]
-        (is (= 400 (:status res)))
-        (is (= "session does not exist" (get-in res [:body :message])))))))
+(deftest user-test
+  (testing "Looks up user from user id in the session corresponding to session id in cookie and returns the user"
+    (let [user (db/with-transaction [tx @db/datasource]
+                 (domain-user/create tx {:google-id "google id"
+                                         :name "name"
+                                         :email "email"}))
+          user-id (:id user)
+          session-id (with-redefs [session/new-id (constantly "valid-session-id")]
+                       (session/create user-id))
+          req {:cookies {:session-id {:value session-id}}}
+          res (user/user req)]
+      (is (= user (-> res
+                      :body
+                      :user))))))

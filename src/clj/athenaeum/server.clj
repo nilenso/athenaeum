@@ -16,14 +16,14 @@
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" [["books" {:get (middleware/wrap-require-session-id-cookie
-                                 book/fetch)}]
-                 ["user/" [["login" {:post (middleware/wrap-require-id-token-header
-                                            user/login)}]
-                           ["logout" {:get (middleware/wrap-require-session-id-cookie
-                                            user/logout)}]
-                           ["me" {:get (middleware/wrap-require-session-id-cookie
-                                        user/user)}]]]]]
+  ["/" [["api/" [["books" {:get (-> book/fetch
+                                    (middleware/wrap-require-session))}]
+                 ["user/" [["login" {:post (-> user/login
+                                               (middleware/wrap-require-id-token-header))}]
+                           ["logout" {:get (-> user/logout
+                                               (middleware/wrap-require-session))}]
+                           ["me" {:get (-> user/user
+                                           (middleware/wrap-require-session))}]]]]]
         [true html/index]]])
 
 (def handler
