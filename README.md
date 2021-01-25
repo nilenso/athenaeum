@@ -9,7 +9,7 @@ Track your books
 - To run the development build with hot-reloading, install [yarn](https://classic.yarnpkg.com/en/docs/install) and run:
 
     ```shell script
-    yarn install # only needs to be run once
+    yarn install     # only needs to be run once
     yarn start
     ```
 
@@ -23,7 +23,7 @@ Track your books
 
 - Install [Redis](https://redis.io/download) (reccommended: v6.0.9) and run its server.
 
-- Install [Postgres](https://www.postgresql.org/download/) (reccommended: v13.1) and create dev and test databses with specs mentioned in their respective [config files](https://github.com/nilenso/athenaeum/tree/master/config).
+- Install [Postgres](https://www.postgresql.org/download/) (reccommended: v12.5+) and create dev and test databses with specs mentioned in their respective [config files](https://github.com/nilenso/athenaeum/tree/master/config).
 
 - To start the backend server from the REPL, run:
 
@@ -51,7 +51,7 @@ Track your books
   or from the terminal with:
 
   ```shell
-  lein run config/config.dev.edn migrate # pass appropriate config files for dev and test migrations
+  lein run config/config.dev.edn migrate     # pass appropriate config files for dev and test migrations
   ```
 
 
@@ -66,7 +66,7 @@ Track your books
 - To run server tests, first run test migrations:
 
     ```shell script
-    lein run config/config.test.edn migrate # whenever migrations are changed/added
+    lein run config/config.test.edn migrate     # whenever migrations are changed/added
     lein test
     ```
 

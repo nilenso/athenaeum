@@ -6,12 +6,13 @@
     name: athenaeum
   register: athenaeum_user
 
-- name: Install JRE, Nginx and PostgreSQL
+- name: Install JRE, Nginx, PostgreSQL and Redis
   apt:
     name:
       - openjdk-11-jre
       - nginx
       - postgresql
+      - redis
     state: present
 
 - set_fact:
@@ -75,6 +76,12 @@
     owner: root
     group: root
     state: link
+
+- name: Enable and restart Redis server
+  service:
+    name: redis-server
+    enabled: yes
+    state: restarted
 
 - name: Enable and restart Nginx
   service:

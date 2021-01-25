@@ -28,7 +28,7 @@ jobs:
       - name: Install dependencies
         run: lein deps
       - name: Run migrations
-        run: lein run "$TEST_CONFIG_FILE" "migrate"
+        run: lein run "$TEST_CONFIG_FILE" migrate
       - name: Run tests
         run: lein test
 
