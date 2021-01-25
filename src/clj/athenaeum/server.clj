@@ -29,6 +29,7 @@
 (def handler
   (-> routes
       make-handler
+      (middleware/wrap-exception-handling)
       (wrap-json-response)
       (wrap-json-body)
       (wrap-keyword-params)

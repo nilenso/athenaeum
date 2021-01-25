@@ -55,3 +55,17 @@
              (->> rq3
                   ((middleware/wrap-keywordize-cookies-and-headers handler))
                   (:body)))))))
+
+(deftest wrap-exception-handling-test
+  (testing "Calls handler in a try block and responds with status 500 if it catches any exceptions"
+    (let [rq {}
+          handler (fn [_] (/ 1 0))]
+      (is (= 500 (->> rq
+                      ((middleware/wrap-exception-handling handler))
+                      (:status))))))
+
+  (testing "Simply calls handler if no exception is thrown"
+    (let [rq {}
+          handler (fn [_] (/ 1 1))]
+      (is (= 1 (->> rq
+                    ((middleware/wrap-exception-handling handler))))))))

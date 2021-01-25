@@ -30,3 +30,11 @@
 (def wrap-require-session-id-cookie
   (comp wrap-keywordize-cookies-and-headers
         wrap-require-session-id-cookie*))
+
+(defn wrap-exception-handling
+  [handler]
+  (fn [request]
+    (try (handler request)
+         (catch Exception _
+           (-> (response/response {:message "Internal server error"})
+               (response/status 500))))))
