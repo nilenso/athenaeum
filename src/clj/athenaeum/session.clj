@@ -8,7 +8,7 @@
   (str (UUID/randomUUID)))
 
 (defn create
-  "returns id of created session"
+  "returns session id"
   [user-id]
   (let [session user-id
         session-id (new-id)]

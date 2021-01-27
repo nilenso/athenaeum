@@ -3,7 +3,8 @@
             [ajax.core :as ajax]
             [athenaeum-web.routes :as routes]
             [athenaeum-web.app.events.routing :as routing-events]
-            [athenaeum-web.app.effects :as effects]))
+            [athenaeum-web.app.effects :as effects]
+            [athenaeum-web.app.events.core :as app-events]))
 
 (defmethod routing-events/on-route-change-event
   :login-page
@@ -32,7 +33,8 @@
  ::login-success
  (fn [{:keys [db]} _]
    {:db (assoc db :login-state :logged-in)
-    :fx [[::effects/navigate-to (routes/path-for :home-page)]]}))
+    :fx [[:dispatch [::app-events/fetch-user]]
+         [::effects/navigate-to (routes/path-for :home-page)]]}))
 
 (rf/reg-event-db
  ::login-failure

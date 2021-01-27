@@ -14,11 +14,12 @@
   (testing "On successful id token verification, creates session,
             adds id-token cookie to response and returns status 200"
     (let [req {:headers {:id-token "valid-id-token"}}
-          res (with-redefs [user/verify-id-token (constantly {:google-id "google-id"
-                                                              :name      "name"
-                                                              :email     "name@nilenso.com"
-                                                              :domain    "nilenso.com"
-                                                              :photo-url "picture"})
+          res (with-redefs [user/verify-id-token (constantly true)
+                            user/get-payload (constantly {:google-id "google-id"
+                                                          :name      "name"
+                                                          :email     "name@nilenso.com"
+                                                          :domain    "nilenso.com"
+                                                          :photo-url "picture"})
                             session/new-id (constantly "new-session-id")]
                 (user/login req))]
       (is (= true (session/exists? "new-session-id")))
@@ -29,11 +30,12 @@
     (tu/with-fixtures
       [fixtures/clear-tables fixtures/clear-sessions]
       (let [req {:headers {:id-token "valid-id-token"}}
-            res (with-redefs [user/verify-id-token (constantly {:google-id "google-id"
-                                                                :name      "name"
-                                                                :email     "name@foo.bar"
-                                                                :domain    "foo.bar"
-                                                                :picture   "picture"})
+            res (with-redefs [user/verify-id-token (constantly true)
+                              user/get-payload (constantly {:google-id "google-id"
+                                                            :name      "name"
+                                                            :email     "name@foo.bar"
+                                                            :domain    "foo.bar"
+                                                            :picture   "picture"})
                               session/new-id (constantly "new-session-id")]
                   (user/login req))]
         (is (= 401 (:status res)))
@@ -58,8 +60,8 @@
   (testing "Looks up user from user id in the session corresponding to session id in cookie and returns the user"
     (let [user (db/with-transaction [tx @db/datasource]
                  (domain-user/create tx {:google-id "google id"
-                                         :name "name"
-                                         :email "email"}))
+                                         :name      "name"
+                                         :email     "email"}))
           user-id (:id user)
           session-id (with-redefs [session/new-id (constantly "valid-session-id")]
                        (session/create user-id))
