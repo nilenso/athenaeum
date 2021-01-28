@@ -8,6 +8,17 @@
             [athenaeum-web.app.effects]
             [day8.re-frame.http-fx]))
 
+(goog-define client-id "default-id")
+
+(defn load-auth2-library
+  []
+  (.load js/gapi "auth2"
+         (clj->js {:callback  (fn []
+                                (.init js/gapi.auth2 (clj->js {:client_id client-id}))
+                                (rf/dispatch [::events/auth2-loaded-status true]))
+                   :timeout   3000
+                   :ontimeout #(js/error "gapi.auth2 failed to load!")})))
+
 (defn render
   []
   (rdom/render [views/root] (js/document.getElementById "root")))
@@ -16,15 +27,6 @@
   []
   (rf/clear-subscription-cache!)
   (render))
-
-(defn load-auth2-library
-  []
-  (.load js/gapi "auth2"
-         (clj->js {:callback (fn []
-                               (.init js/gapi.auth2 (clj->js {:client_id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}))
-                               (rf/dispatch [::events/auth2-loaded-status true]))
-                   :timeout 3000
-                   :ontimeout #(js/error "gapi.auth2 failed to load!")})))
 
 (defn run
   []
