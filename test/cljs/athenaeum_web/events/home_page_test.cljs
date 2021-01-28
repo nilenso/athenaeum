@@ -8,7 +8,7 @@
             [athenaeum-web.app.subscriptions]))
 
 (deftest home-page-navigated-test
-  (testing "When home page is navigated, fetch-books is dispatched"
+  (testing "When home page is navigated, books are fetched"
     (rf-test/run-test-sync
      (let [stubbed-event (tu/stub-event ::home-page-events/fetch-books)]
        (rf/dispatch [::home-page-events/home-page-navigated])

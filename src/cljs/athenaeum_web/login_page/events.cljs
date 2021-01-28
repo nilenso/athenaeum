@@ -2,11 +2,9 @@
   (:require [re-frame.core :as rf]
             [ajax.core :as ajax]
             [athenaeum-web.routes :as routes]
-            [athenaeum-web.app.events.routing :as routing-events]
-            [athenaeum-web.app.effects :as effects]
-            [athenaeum-web.app.events.core :as app-events]))
+            [athenaeum-web.app.events :as events]))
 
-(defmethod routing-events/on-route-change-event
+(defmethod routes/on-route-change-event
   :login-page
   [_]
   ::login-page-navigated)
@@ -15,12 +13,7 @@
  ::login-page-navigated
  (fn [{:keys [db]} _]
    (when (= :logged-in (:login-state db))
-     {:fx [[::effects/navigate-to (routes/path-for :home-page)]]})))
-
-(rf/reg-event-fx
- :redirect-to-login
- (fn [_ _]
-   {:fx [[::effects/navigate-to (routes/path-for :login-page)]]}))
+     {:fx [[::routes/navigate-to (routes/path-for :home-page)]]})))
 
 (rf/reg-event-fx
  ::login
@@ -38,8 +31,8 @@
  ::login-success
  (fn [{:keys [db]} _]
    {:db (assoc db :login-state :logged-in)
-    :fx [[:dispatch [::app-events/fetch-user]]
-         [::effects/navigate-to (routes/path-for :home-page)]]}))
+    :fx [[:dispatch [::events/fetch-user]]
+         [::routes/navigate-to (routes/path-for :home-page)]]}))
 
 (rf/reg-event-db
  ::login-failure

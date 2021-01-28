@@ -2,10 +2,9 @@
   (:require [reagent.dom :as rdom]
             [re-frame.core :as rf]
             [athenaeum-web.app.views :as views]
-            [athenaeum-web.app.events.core :as events]
+            [athenaeum-web.app.events :as events]
             [athenaeum-web.routes :as routes]
             [athenaeum-web.home-page.events]
-            [athenaeum-web.app.effects]
             [day8.re-frame.http-fx]))
 
 (defn render

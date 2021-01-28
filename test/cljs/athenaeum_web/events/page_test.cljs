@@ -5,13 +5,13 @@
             [re-frame.db :as rf-db]
             [athenaeum-web.test-utils :as tu]
             [athenaeum-web.page.events :as page-events]
-            [athenaeum-web.app.effects :as effects]
-            [athenaeum-web.app.subscriptions :as subs]))
+            [athenaeum-web.app.subscriptions :as subs]
+            [athenaeum-web.routes :as routes]))
 
 (deftest logout-test
   (testing "On successful logout, login state should be set to logged-out and login page should be navigated to"
     (rf-test/run-test-sync
-     (let [navigate-to-params (tu/stub-effect ::effects/navigate-to)]
+     (let [navigate-to-params (tu/stub-effect ::routes/navigate-to)]
        (tu/initialize-db)
        (tu/stub-api-call {} true)
        (rf/dispatch [::page-events/logout])

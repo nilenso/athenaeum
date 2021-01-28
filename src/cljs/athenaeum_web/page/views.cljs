@@ -1,20 +1,20 @@
 (ns athenaeum-web.page.views
   (:require [re-frame.core :as rf]
-            [athenaeum-web.app.subscriptions :as s]
+            [athenaeum-web.app.subscriptions :as subs]
             [athenaeum-web.routes :as routes]
-            [athenaeum-web.page.events :as e]))
+            [athenaeum-web.page.events :as events]))
 
 (defn- on-logout
   [_]
   (.then (.signOut (js/gapi.auth2.getAuthInstance))
-         #(rf/dispatch [::e/logout])
+         #(rf/dispatch [::events/logout])
          #(js/console.error "logout failed!")))
 
 (defn- logout-button
   []
   [:button.btn.btn-outline-secondary
    {:on-click on-logout
-    :disabled (not @(rf/subscribe [::s/auth2-loaded]))}
+    :disabled (not @(rf/subscribe [::subs/auth2-loaded]))}
    "Log out"])
 
 (defn- page-link
@@ -22,7 +22,7 @@
   [:a {:class (str "nav-item nav-link pr-3"
                    (when
                     (= handler
-                       (:handler @(rf/subscribe [::s/current-page])))
+                       (:handler @(rf/subscribe [::subs/current-page])))
                      " active"))
        :href  (routes/path-for handler)} page-name])
 
@@ -32,4 +32,4 @@
    [:a.navbar-brand {:href (routes/path-for :home-page)} "Athenaeum"]
    [:div.navbar-nav.flex-row
     [page-link :home-page "Home"]
-    (when (= @(rf/subscribe [::s/login-state]) :logged-in) [logout-button])]])
+    (when (= @(rf/subscribe [::subs/login-state]) :logged-in) [logout-button])]])

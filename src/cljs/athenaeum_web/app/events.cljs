@@ -1,4 +1,4 @@
-(ns athenaeum-web.app.events.core
+(ns athenaeum-web.app.events
   (:require [re-frame.core :as rf]
             [athenaeum-web.app.db :as db]
             [ajax.core :as ajax]))
