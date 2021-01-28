@@ -18,10 +18,9 @@
 (def routes
   ["/" [["api/" [["books" {:get (-> book/fetch
                                     (middleware/wrap-require-session))}]
-                 ["user/" [["login" {:post (-> user/login
-                                               (middleware/wrap-require-id-token-header))}]
+                 ["user/" [["login" {:post user/login}]
                            ["logout" {:get (-> user/logout
-                                               (middleware/wrap-require-session-id-cookie))}]
+                                               (middleware/wrap-require-session))}]
                            ["me" {:get (-> user/user
                                            (middleware/wrap-require-session))}]]]]]
         [true html/index]]])

@@ -17,7 +17,7 @@
        (rf/dispatch [::login-page-events/login-page-navigated])
        (is (= ["/"] @navigate-to-params)))))
 
-  (testing "When login page is navigated and user is logged in, nothing happens"
+  (testing "When login page is navigated and user is logged out, nothing happens"
     (rf-test/run-test-sync
      (let [db-before @rf-db/app-db]
        (tu/initialize-db)

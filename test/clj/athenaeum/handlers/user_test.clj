@@ -38,7 +38,7 @@
                                                             :picture   "picture"})
                               session/new-id (constantly "new-session-id")]
                   (user/login req))]
-        (is (= 401 (:status res)))
+        (is (= 400 (:status res)))
         (is (= "invalid domain" (get-in res [:body :message]))))))
 
   (testing "If id token is invalid, returns status 400"

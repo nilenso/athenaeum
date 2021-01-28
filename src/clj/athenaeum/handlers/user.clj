@@ -9,6 +9,13 @@
            (com.google.api.client.googleapis.javanet GoogleNetHttpTransport)
            (com.google.api.client.json.jackson2 JacksonFactory)))
 
+(defonce id-token-verifier
+  (let [client-id (get-in @config/config [:oauth :google :client-id])]
+    (-> (GoogleNetHttpTransport/newTrustedTransport)
+        (GoogleIdTokenVerifier$Builder. (JacksonFactory.))
+        (.setAudience [client-id])
+        (.build))))
+
 (defn- reformat-payload
   [payload]
   {:google-id (:sub payload)
@@ -19,13 +26,8 @@
 
 (defn- verify-id-token
   [id-token-string]
-  (let [client-id (get-in @config/config [:oauth :google :client-id])
-        id-token-verifier (-> (GoogleNetHttpTransport/newTrustedTransport)
-                              (GoogleIdTokenVerifier$Builder. (JacksonFactory.))
-                              (.setAudience [client-id])
-                              (.build))]
-    (try (.verify ^GoogleIdTokenVerifier id-token-verifier ^String id-token-string)
-         (catch Exception _ nil))))
+  (try (.verify ^GoogleIdTokenVerifier id-token-verifier ^String id-token-string)
+       (catch Exception _ nil)))
 
 (defn- get-payload
   [id-token]
@@ -35,38 +37,31 @@
        (walk/keywordize-keys)
        (reformat-payload)))
 
-(defn- find-or-create-user
-  [payload]
-  (if-let [user (db/with-transaction [tx @db/datasource]
-                  (user/fetch-by-google-id tx (:google-id payload)))]
-    user
-    (db/with-transaction [tx @db/datasource]
-      (user/create tx payload))))
-
 (defn- set-session-id-cookie
   [response session-id]
   (response/set-cookie response
                        :session-id
                        session-id
                        {:same-site :strict
-                        :max-age   3600
+                        :max-age   (get @config/config :session-ttl)
                         :path      "/api"}))
 
 (defn login
   [{:keys [headers]}]
-  (if-let [payload (some-> headers
-                           :id-token
-                           verify-id-token
-                           get-payload)]
-    (if (= (:domain payload) "nilenso.com")
-      (-> (response/response {:message "login success"})
-          (set-session-id-cookie (-> payload
-                                     find-or-create-user
-                                     :id
-                                     session/create)))
-      (-> (response/response {:message "invalid domain"})
-          (response/status 401)))
-    (response/bad-request {:message "id token verification failed"})))
+  (if-let [id-token (:id-token (walk/keywordize-keys headers))]
+    (if-let [user (some-> id-token
+                          verify-id-token
+                          get-payload)]
+      (if (= (:domain user) "nilenso.com")
+        (-> (response/response {:message "login success"})
+            (set-session-id-cookie (-> (db/with-transaction [tx @db/datasource]
+                                         (user/find-by-google-id-or-create tx user))
+                                       :id
+                                       session/create)))
+        (-> (response/response {:message "invalid domain"})
+            (response/status 400)))
+      (response/bad-request {:message "id token verification failed"}))
+    (response/bad-request {:message "id token header missing"})))
 
 (defn logout
   [{:keys [cookies]}]
@@ -79,5 +74,5 @@
   (let [session-id (get-in cookies [:session-id :value])
         user-id (session/fetch session-id)
         user (db/with-transaction [tx @db/datasource]
-               (user/fetch-by-id tx user-id))]
+               (user/find-by-id tx user-id))]
     (response/response {:user user})))

@@ -16,20 +16,20 @@
                                   :email     "email"}))
           user-id (:id user)
           returned-user (db/with-transaction [tx @db/datasource]
-                          (user/fetch-by-id tx user-id))]
+                          (user/find-by-id tx user-id))]
       (is (= user returned-user))))
 
   (tu/with-fixtures
     [fixtures/clear-tables]
     (testing "If record with given id does not exist, return nil"
       (let [returned-user (db/with-transaction [tx @db/datasource]
-                            (user/fetch-by-id tx 1))]
+                            (user/find-by-id tx 1))]
         (is (= nil returned-user))))))
 
 (deftest fetch-by-google-id-test
   (testing "If record with given google id does not exist, return nil"
     (let [returned-user (db/with-transaction [tx @db/datasource]
-                          (user/fetch-by-google-id tx "test-id"))]
+                          (user/find-by-google-id tx "test-id"))]
       (is (= nil returned-user))))
 
   (testing "If record with given google id exists, return it"
@@ -41,5 +41,5 @@
                                     :name      "name"
                                     :email     "email"}))
             returned-user (db/with-transaction [tx @db/datasource]
-                            (user/fetch-by-google-id tx google-id))]
+                            (user/find-by-google-id tx google-id))]
         (is (= user returned-user))))))

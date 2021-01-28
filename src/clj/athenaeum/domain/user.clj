@@ -1,13 +1,13 @@
 (ns athenaeum.domain.user
   (:require [next.jdbc.sql :as sql]))
 
-(defn fetch-by-id
+(defn find-by-id
   [c id]
   (sql/get-by-id c
                  :users
                  id))
 
-(defn fetch-by-google-id
+(defn find-by-google-id
   [c google-id]
   (first (sql/find-by-keys c
                            :users
@@ -22,3 +22,9 @@
                 :name      (:name user)
                 :email     (:email user)
                 :photo_url (:photo-url user)}))
+
+(defn find-by-google-id-or-create
+  [c user]
+  (if-let [user (find-by-google-id c (:google-id user))]
+    user
+    (create c user)))
