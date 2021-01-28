@@ -19,12 +19,9 @@
 
 (defn load-auth2-library
   []
-  (.load js/gapi "auth2"
-         (clj->js {:callback (fn []
-                               (.init js/gapi.auth2 (clj->js {:client_id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}))
-                               (rf/dispatch [::events/auth2-loaded-status true]))
-                   :timeout 3000
-                   :ontimeout #(js/error "gapi.auth2 failed to load!")})))
+  (.load js/gapi "auth2" (fn []
+                           (.init js/gapi.auth2 (clj->js {:client_id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}))
+                           (rf/dispatch [::events/auth2-loaded-status true]))))
 
 (defn run
   []

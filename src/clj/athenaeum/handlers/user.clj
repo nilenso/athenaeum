@@ -1,6 +1,7 @@
 (ns athenaeum.handlers.user
   (:require [ring.util.response :as response]
             [clojure.walk :as walk]
+            [clojure.string :as str]
             [athenaeum.config :as config]
             [athenaeum.db :as db]
             [athenaeum.session :as session]
@@ -9,12 +10,18 @@
            (com.google.api.client.googleapis.javanet GoogleNetHttpTransport)
            (com.google.api.client.json.jackson2 JacksonFactory)))
 
-(defonce id-token-verifier
-  (let [client-id (get-in @config/config [:oauth :google :client-id])]
-    (-> (GoogleNetHttpTransport/newTrustedTransport)
-        (GoogleIdTokenVerifier$Builder. (JacksonFactory.))
-        (.setAudience [client-id])
-        (.build))))
+(defonce id-token-verifier (atom nil))
+
+(defn set-id-token-verifier
+  []
+  (reset! id-token-verifier (-> (GoogleNetHttpTransport/newTrustedTransport)
+                                (GoogleIdTokenVerifier$Builder. (JacksonFactory.))
+                                (.setAudience [(get-in @config/config [:oauth :google :client-id])])
+                                (.build))))
+
+(defn reset-id-token-verifier
+  [new-value]
+  (reset! id-token-verifier new-value))
 
 (defn- reformat-payload
   [payload]
@@ -26,7 +33,7 @@
 
 (defn- verify-id-token
   [id-token-string]
-  (try (.verify ^GoogleIdTokenVerifier id-token-verifier ^String id-token-string)
+  (try (.verify ^GoogleIdTokenVerifier @id-token-verifier ^String id-token-string)
        (catch Exception _ nil)))
 
 (defn- get-payload
@@ -48,7 +55,11 @@
 
 (defn login
   [{:keys [headers]}]
-  (if-let [id-token (:id-token (walk/keywordize-keys headers))]
+  (if-let [id-token (-> headers
+                        walk/keywordize-keys
+                        :authorization
+                        (str/split #" ")
+                        last)]
     (if-let [user (some-> id-token
                           verify-id-token
                           get-payload)]
@@ -65,9 +76,10 @@
 
 (defn logout
   [{:keys [cookies]}]
-  (let [session-id (get-in cookies [:session-id :value])]
-    (session/delete session-id)
-    (response/response {:message "session deleted"})))
+  (if-let [session-id (get-in (walk/keywordize-keys cookies) [:session-id :value])]
+    (do (session/delete session-id)
+        (response/response {:message "session deleted"}))
+    (response/bad-request {:message "session id cookie missing"})))
 
 (defn user
   [{:keys [cookies]}]

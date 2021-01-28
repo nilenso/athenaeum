@@ -5,16 +5,14 @@
             [athenaeum-web.test-utils :as tu]
             [athenaeum-web.home-page.events :as home-page-events]
             [athenaeum-web.home-page.subscriptions :as home-page-subs]
-            [athenaeum-web.app.subscriptions]
-            [athenaeum-web.app.events.authentication :as authentication-events]))
+            [athenaeum-web.app.subscriptions]))
 
 (deftest home-page-navigated-test
-  (testing "When home page is navigated, auth-check event is dispatched with fetch-books as a parameter"
+  (testing "When home page is navigated, fetch-books is dispatched"
     (rf-test/run-test-sync
-     (let [stubbed-event (tu/stub-event ::authentication-events/authentication-check)]
+     (let [stubbed-event (tu/stub-event ::home-page-events/fetch-books)]
        (rf/dispatch [::home-page-events/home-page-navigated])
-       (is (= ::authentication-events/authentication-check (first @stubbed-event)))
-       (is (= ::home-page-events/fetch-books (second @stubbed-event)))))))
+       (is (= [::home-page-events/fetch-books] @stubbed-event))))))
 
 (deftest fetch-books-test
   (testing "On successfully fetching books, they should be put into db"

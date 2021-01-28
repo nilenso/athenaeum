@@ -15,15 +15,7 @@
        (tu/initialize-db)
        (swap! rf-db/app-db assoc :login-state :logged-in)
        (rf/dispatch [::login-page-events/login-page-navigated])
-       (is (= ["/"] @navigate-to-params)))))
-
-  (testing "When login page is navigated and user is logged out, nothing happens"
-    (rf-test/run-test-sync
-     (let [db-before @rf-db/app-db]
-       (tu/initialize-db)
-       (swap! rf-db/app-db assoc :login-state :logged-out)
-       (rf/dispatch [::login-page-events/login-page-navigated])
-       (is @rf-db/app-db db-before)))))
+       (is (= ["/"] @navigate-to-params))))))
 
 (deftest login-test
   (testing "On successful login, login state should be set to logged-in and set home page"

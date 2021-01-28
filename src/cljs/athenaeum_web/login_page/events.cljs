@@ -18,11 +18,16 @@
      {:fx [[::effects/navigate-to (routes/path-for :home-page)]]})))
 
 (rf/reg-event-fx
+ :redirect-to-login
+ (fn [_ _]
+   {:fx [[::effects/navigate-to (routes/path-for :login-page)]]}))
+
+(rf/reg-event-fx
  ::login
  (fn [_ [_ id-token]]
    {:http-xhrio {:method          :post
                  :uri             "/api/user/login"
-                 :headers         {:id-token id-token}
+                 :headers         {:Authorization (str "Bearer " id-token)}                          ;{:id-token id-token}
                  :timeout         8000
                  :format          (ajax/json-request-format)
                  :response-format (ajax/json-response-format {:keywords? true})

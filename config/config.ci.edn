@@ -4,4 +4,5 @@
                :dbname   "athenaeum_ci"
                :user     "athenaeum_ci_user"
                :password "athenaeum_ci_pwd"
-               :host     "localhost"}}
+               :host     "localhost"}
+ :oauth       {:google {:client-id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}}}

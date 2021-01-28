@@ -3,7 +3,8 @@
             [athenaeum.config :as config]
             [athenaeum.redis :as redis]
             [next.jdbc :as jdbc]
-            [athenaeum.session :as session]))
+            [athenaeum.session :as session]
+            [athenaeum.handlers.user :as user]))
 
 (defn load-config
   [f]
@@ -26,6 +27,13 @@
     (redis/set-conn-opts)
     (f)
     (redis/reset-conn previous-conn)))
+
+(defn set-id-token-verifier
+  [f]
+  (let [previous-verifier @redis/server-conn]
+    (user/set-id-token-verifier)
+    (f)
+    (user/reset-id-token-verifier previous-verifier)))
 
 (defn- truncate-all-tables
   []

@@ -4,11 +4,13 @@
             [athenaeum.db :as db]
             [ring.adapter.jetty :as jetty]
             [athenaeum.migrations :as migrations]
-            [athenaeum.redis :as redis]))
+            [athenaeum.redis :as redis]
+            [athenaeum.handlers.user :as user]))
 
 (defn start-app
   []
   (config/load-config "config/config.dev.edn")
+  (user/set-id-token-verifier)
   (redis/set-conn-opts)
   (db/set-datasource)
   (migrations/migrate)
