@@ -7,13 +7,13 @@
             [athenaeum.test-utils :as tu]
             [athenaeum.db :as db]))
 
-(use-fixtures :once fixtures/load-config fixtures/set-datasource fixtures/set-redis-server-conn)
+(use-fixtures :once fixtures/load-config fixtures/set-id-token-verifier fixtures/set-datasource fixtures/set-redis-server-conn)
 (use-fixtures :each fixtures/clear-tables fixtures/clear-sessions)
 
 (deftest login-test
   (testing "On successful id token verification, creates session,
             adds id-token cookie to response and returns status 200"
-    (let [req {:headers {:id-token "valid-id-token"}}
+    (let [req {:headers {:authorization "Bearer valid-id-token"}}
           res (with-redefs [user/verify-id-token (constantly true)
                             user/get-payload (constantly {:google-id "google-id"
                                                           :name      "name"
@@ -29,7 +29,7 @@
   (testing "If email domain is not nilenso.com, returns status 401 "
     (tu/with-fixtures
       [fixtures/clear-tables fixtures/clear-sessions]
-      (let [req {:headers {:id-token "valid-id-token"}}
+      (let [req {:headers {:authorization "Bearer valid-id-token"}}
             res (with-redefs [user/verify-id-token (constantly true)
                               user/get-payload (constantly {:google-id "google-id"
                                                             :name      "name"
@@ -38,11 +38,11 @@
                                                             :picture   "picture"})
                               session/new-id (constantly "new-session-id")]
                   (user/login req))]
-        (is (= 401 (:status res)))
+        (is (= 400 (:status res)))
         (is (= "invalid domain" (get-in res [:body :message]))))))
 
   (testing "If id token is invalid, returns status 400"
-    (let [req {:headers {:id-token "invalid-id-token"}}
+    (let [req {:headers {:authorization "Bearer invalid-id-token"}}
           res (user/login req)]
       (is (= 400 (:status res)))
       (is (= "id token verification failed" (get-in res [:body :message]))))))

@@ -2,10 +2,9 @@
   (:require [re-frame.core :as rf]
             [ajax.core :as ajax]
             [athenaeum-web.utils :as utils]
-            [athenaeum-web.app.events.routing :as routing-events]
-            [athenaeum-web.app.events.authentication :as authentication-events]))
+            [athenaeum-web.routes :as routes]))
 
-(defmethod routing-events/on-route-change-event
+(defmethod routes/on-route-change-event
   :home-page
   [_]
   ::home-page-navigated)
@@ -13,7 +12,7 @@
 (rf/reg-event-fx
  ::home-page-navigated
  (fn [_ _]
-   {:dispatch [::authentication-events/authentication-check ::fetch-books]}))
+   {:dispatch [::fetch-books]}))
 
 (rf/reg-event-fx
  ::fetch-books

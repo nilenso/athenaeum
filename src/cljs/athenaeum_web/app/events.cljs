@@ -1,4 +1,4 @@
-(ns athenaeum-web.app.events.core
+(ns athenaeum-web.app.events
   (:require [re-frame.core :as rf]
             [athenaeum-web.app.db :as db]
             [ajax.core :as ajax]))
@@ -25,10 +25,10 @@
 
 (rf/reg-event-fx
  ::fetch-user-success
- (fn [{:keys [db]} [_ event user]]
+ (fn [{:keys [db]} [_ event {:keys [user]}]]
    {:db       (-> db
                   (assoc :login-state :logged-in)
-                  (assoc :user (:user user)))
+                  (assoc :user user))
     :dispatch (if event [event] [])}))
 
 (rf/reg-event-fx
