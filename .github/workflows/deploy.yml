@@ -16,9 +16,7 @@ jobs:
         run: yarn install
 
       - name: Build the frontend
-        run: |
-          yarn clean
-          shadow-cljs release app --config-merge {:closure-defines {athenaeum-web.core/client-id "$STAGING_CLIENT_ID"}}
+        run: yarn release
 
       - name: Install backend deps
         run: lein deps
