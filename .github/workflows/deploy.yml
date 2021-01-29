@@ -1,13 +1,13 @@
 name: Build uberjar and deploy to staging
 
-on:
-  push:
-    branches:
-      - master
+on: push
 
 jobs:
   build-uberjar:
     runs-on: ubuntu-latest
+
+    env:
+      STAGING_CLIENT_ID: ${{secrets.STAGING_CLIENT_ID}}
 
     steps:
       - uses: actions/checkout@v2
@@ -16,7 +16,9 @@ jobs:
         run: yarn install
 
       - name: Build the frontend
-        run: yarn release
+        run: |
+          yarn clean
+          shadow-cljs release app --config-merge {:closure-defines {athenaeum-web.core/client-id "$STAGING_CLIENT_ID"}}
 
       - name: Install backend deps
         run: lein deps
