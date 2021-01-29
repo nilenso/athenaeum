@@ -12,12 +12,9 @@
 
 (defn load-auth2-library
   []
-  (.load js/gapi "auth2"
-         (clj->js {:callback  (fn []
-                                (.init js/gapi.auth2 (clj->js {:client_id client-id}))
-                                (rf/dispatch [::events/auth2-loaded-status true]))
-                   :timeout   3000
-                   :ontimeout #(js/error "gapi.auth2 failed to load!")})))
+  (.load js/gapi "auth2" (fn []
+                           (.init js/gapi.auth2 (clj->js {:client_id client-id}))
+                           (rf/dispatch [::events/auth2-loaded-status true]))))
 
 (defn render
   []
