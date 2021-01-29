@@ -1,13 +1,16 @@
 name: Build uberjar and deploy to staging
 
-on: push
+on:
+  push:
+    branch:
+      - master
 
 jobs:
   build-uberjar:
     runs-on: ubuntu-latest
 
     env:
-      STAGING_CLIENT_ID: ${{secrets.STAGING_CLIENT_ID}}
+      CLIENT_ID: ${{secrets.STAGING_CLIENT_ID}}
 
     steps:
       - uses: actions/checkout@v2
