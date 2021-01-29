@@ -5,4 +5,5 @@
                :user     "athenaeum_test_user"
                :password "athenaeum_test_pwd"
                :host     "localhost"}
- :oauth       {:google {:client-id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}}}
+ :oauth       {:google {:client-id     "test-client-id"
+                        :client-secret "test-client-secret"}}}
