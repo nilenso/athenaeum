@@ -1,7 +1,7 @@
 {
   "name": "athenaeum",
   "scripts": {
-    "start": "shadow-cljs watch app",
+    "start": "source .secret_env_vars && shadow-cljs watch app",
     "clean": "rm -rf resources/public/css/ && rm -rf resources/public/js/",
     "release": "yarn clean && shadow-cljs release app",
     "test": "shadow-cljs compile test && node target/test.js"

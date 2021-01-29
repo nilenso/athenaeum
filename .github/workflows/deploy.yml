@@ -9,6 +9,9 @@ jobs:
   build-uberjar:
     runs-on: ubuntu-latest
 
+    env:
+      CLIENT_ID: ${{secrets.STAGING_CLIENT_ID}}
+
     steps:
       - uses: actions/checkout@v2
 

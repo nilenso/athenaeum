@@ -1,11 +1,11 @@
 (ns athenaeum.config
-  (:require [clojure.edn :as edn]))
+  (:require [aero.core :as aero]))
 
 (defonce config (atom nil))
 
 (defn load-config
   [file-name]
-  (reset! config (edn/read-string (slurp file-name))))
+  (reset! config (aero/read-config file-name)))
 
 (defn reset-config
   [new-val]

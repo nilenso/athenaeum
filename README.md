@@ -8,16 +8,22 @@ Track your books
 
 - To run the development build with hot-reloading, install [yarn](https://classic.yarnpkg.com/en/docs/install) and run:
 
-    ```shell script
+    ```shell
     yarn install     # only needs to be run once
     yarn start
     ```
 
 - To generate the release build:
 
-    ```shell script
+    ```shell
     yarn release
     ```
+
+- Add a .secret_env_vars file to the project root directory containing the following line:
+
+  ```shell
+  export CLIENT_ID="<dev_client_id_here>"
+  ```
 
 #### backend
 
@@ -33,7 +39,7 @@ Track your books
 
     or from the terminal, install [Leiningen](https://leiningen.org/#install) and run:
 
-    ```shell script
+    ```shell
     lein deps
     lein run config/config.dev.edn
     ```
