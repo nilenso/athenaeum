@@ -1,7 +1,11 @@
-(ns athenaeum.test-utils
-  (:require [next.jdbc :as jdbc]
-            [athenaeum.db :as db]))
+(ns athenaeum.test-utils)
 
-(defn clear-tables
-  []
-  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books"]))
+(defmacro with-fixtures
+  [fixtures & body]
+  (if (= 1 (count fixtures))
+    `(~(first fixtures)
+      (fn []
+        ~@body))
+    `(with-fixtures
+       [~(first fixtures)]
+       (with-fixtures ~(rest fixtures) ~@body))))

@@ -1,21 +1,30 @@
 (ns athenaeum-web.core
   (:require [reagent.dom :as rdom]
-            [athenaeum-web.views :as v]
-            [athenaeum-web.routes :as routes]
             [re-frame.core :as rf]
-            [athenaeum-web.events :as e]))
+            [athenaeum-web.app.views :as views]
+            [athenaeum-web.app.events :as events]
+            [athenaeum-web.routes :as routes]
+            [athenaeum-web.home-page.events]
+            [day8.re-frame.http-fx]))
 
 (defn render
   []
-  (rdom/render [v/root] (js/document.getElementById "root")))
+  (rdom/render [views/root] (js/document.getElementById "root")))
 
 (defn ^:dev/after-load rerun
   []
   (rf/clear-subscription-cache!)
   (render))
 
+(defn load-auth2-library
+  []
+  (.load js/gapi "auth2" (fn []
+                           (.init js/gapi.auth2 (clj->js {:client_id "391229463438-a0vus34lglv9tsggpbmq2l1ekfb2lc3s.apps.googleusercontent.com"}))
+                           (rf/dispatch [::events/auth2-loaded-status true]))))
+
 (defn run
   []
-  (rf/dispatch-sync [::e/initialize-db])
+  (rf/dispatch-sync [::events/initialize-db])
+  (load-auth2-library)
   (routes/init)
   (render))

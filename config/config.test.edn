@@ -1,5 +1,9 @@
-{:db-spec {:dbtype   "postgresql"
-           :dbname   "athenaeum_test"
-           :user     "athenaeum_test_user"
-           :password "athenaeum_test_pwd"
-           :host     "localhost"}}
+{:redis-host  "127.0.0.1"
+ :session-ttl 300
+ :db-spec     {:dbtype   "postgresql"
+               :dbname   "athenaeum_test"
+               :user     "athenaeum_test_user"
+               :password "athenaeum_test_pwd"
+               :host     "localhost"}
+ :oauth       {:google {:client-id     "test-client-id"
+                        :client-secret "test-client-secret"}}}

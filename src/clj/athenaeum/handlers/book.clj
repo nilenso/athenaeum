@@ -1,7 +1,7 @@
 (ns athenaeum.handlers.book
   (:require [ring.util.response :as response]
-            [athenaeum.domain.book :as books]
-            [athenaeum.db :as db]))
+            [athenaeum.db :as db]
+            [athenaeum.domain.book :as books]))
 
 (defn fetch
   [_]

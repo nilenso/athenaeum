@@ -15,15 +15,13 @@
       (is (= [] res))))
 
   (testing "Returns list of books when db is non-empty"
-    (tu/clear-tables)
-    (let [book1 (db/with-transaction [tx @db/datasource]
-                  (book/create tx "book1" "author1"))
-          book2 (db/with-transaction [tx @db/datasource]
-                  (book/create tx "book2" "author2"))
-          book3 (db/with-transaction [tx @db/datasource]
-                  (book/create tx "book3" "author3"))
-          books [book1 book2 book3]
-          returned-books (db/with-transaction [tx @db/datasource]
-                           (book/fetch-all tx))
-          remove-id #(dissoc % :id)]
-      (is (= (map remove-id books) (map remove-id returned-books))))))
+    (tu/with-fixtures
+      [fixtures/clear-tables]
+      (let [book1 (db/with-transaction [tx @db/datasource]
+                    (book/create tx "book1" "author1"))
+            book2 (db/with-transaction [tx @db/datasource]
+                    (book/create tx "book2" "author2"))
+            books [book1 book2]
+            returned-books (db/with-transaction [tx @db/datasource]
+                             (book/fetch-all tx))]
+        (is (= books returned-books))))))

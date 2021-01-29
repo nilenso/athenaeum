@@ -1,7 +1,10 @@
 (ns athenaeum.fixtures
   (:require [athenaeum.db :as db]
             [athenaeum.config :as config]
-            [athenaeum.test-utils :as tu]))
+            [athenaeum.redis :as redis]
+            [next.jdbc :as jdbc]
+            [athenaeum.session :as session]
+            [athenaeum.handlers.user :as user]))
 
 (defn load-config
   [f]
@@ -18,7 +21,31 @@
     (f)
     (db/reset-datasource previous-datasource)))
 
+(defn set-redis-server-conn
+  [f]
+  (let [previous-conn @redis/server-conn]
+    (redis/set-conn-opts)
+    (f)
+    (redis/reset-conn previous-conn)))
+
+(defn set-id-token-verifier
+  [f]
+  (let [previous-verifier @redis/server-conn]
+    (user/set-id-token-verifier)
+    (f)
+    (user/reset-id-token-verifier previous-verifier)))
+
+(defn- truncate-all-tables
+  []
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE books CASCADE"])
+  (jdbc/execute! @db/datasource ["TRUNCATE TABLE users CASCADE"]))
+
 (defn clear-tables
   [f]
-  (tu/clear-tables)
+  (truncate-all-tables)
+  (f))
+
+(defn clear-sessions
+  [f]
+  (session/delete-all-sessions)
   (f))

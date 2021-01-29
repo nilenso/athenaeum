@@ -3,25 +3,38 @@
             [athenaeum.handlers.core :as html]
             [athenaeum.config :as config]
             [athenaeum.handlers.book :as book]
+            [athenaeum.handlers.user :as user]
             [bidi.ring :refer (make-handler)]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.params :refer [wrap-params]]
             [ring.middleware.keyword-params :refer [wrap-keyword-params]]
-            [ring.middleware.json :refer [wrap-json-response]]))
+            [ring.middleware.json :refer [wrap-json-response wrap-json-body]]
+            [ring.middleware.cookies :refer [wrap-cookies]]
+            [ring.middleware.content-type :refer [wrap-content-type]]
+            [athenaeum.middleware :as middleware]))
 
 (defonce server (atom nil))
 
 (def routes
-  ["/" [["api/" {"books" {:get book/fetch}}]
+  ["/" [["api/" [["books" {:get (-> book/fetch
+                                    (middleware/wrap-require-session))}]
+                 ["user/" [["login" {:post user/login}]
+                           ["logout" {:get user/logout}]
+                           ["me" {:get (-> user/user
+                                           (middleware/wrap-require-session))}]]]]]
         [true html/index]]])
 
 (def handler
   (-> routes
       make-handler
+      (middleware/wrap-exception-handling)
       (wrap-json-response)
+      (wrap-json-body)
       (wrap-keyword-params)
       (wrap-params)
-      (wrap-resource "public")))
+      (wrap-cookies)
+      (wrap-resource "public")
+      (wrap-content-type)))
 
 (defn start-app
   []
