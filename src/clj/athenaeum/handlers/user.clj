@@ -55,11 +55,11 @@
 
 (defn login
   [{:keys [headers]}]
-  (if-let [id-token (-> headers
-                        walk/keywordize-keys
-                        :authorization
-                        (str/split #" ")
-                        last)]
+  (if-let [id-token (some-> headers
+                            walk/keywordize-keys
+                            :authorization
+                            (str/split #" ")
+                            last)]
     (if-let [user (some-> id-token
                           verify-id-token
                           get-payload)]
@@ -69,8 +69,7 @@
                                          (user/find-by-google-id-or-create tx user))
                                        :id
                                        session/create)))
-        (-> (response/response {:message "invalid domain"})
-            (response/status 400)))
+        (response/bad-request {:message "invalid domain"}))
       (response/bad-request {:message "id token verification failed"}))
     (response/bad-request {:message "id token header missing"})))
 

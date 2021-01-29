@@ -20,7 +20,7 @@
  (fn [_ [_ id-token]]
    {:http-xhrio {:method          :post
                  :uri             "/api/user/login"
-                 :headers         {:Authorization (str "Bearer " id-token)}                          ;{:id-token id-token}
+                 :headers         {:Authorization (str "Bearer " id-token)}
                  :timeout         8000
                  :format          (ajax/json-request-format)
                  :response-format (ajax/json-response-format {:keywords? true})
